@@ -2,16 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
 .App-header {
   background-color: #282c34;
@@ -24,15 +14,32 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Navigation styles */
+
+.nav-bar {
+  background-color: orange;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.nav-bar a {
+  text-decoration: none;
+  color: white;
 }
+
+/* Change the color of links on hover */
+.nav-bar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.nav-bar a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+
