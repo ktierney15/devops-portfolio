@@ -1,6 +1,6 @@
 import React from 'react'
 import './App.css';
-import { BrowserRouter, Routes, Route, withRouter } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 
 import Header from "./components/Header"
 
@@ -24,6 +24,9 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <div>
+
+      </div>
       </header>
     </div>
   );

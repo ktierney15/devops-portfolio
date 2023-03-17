@@ -6,21 +6,24 @@ import React from 'react';
 import {  Outlet, Link } from "react-router-dom";
 const Header= () =>{
   return (
-  <div>
-    <li>
-      <Link to="/">Kevin Tierney</Link>
-    </li>
-    <li>
-      <Link to="/projects">Projects</Link>
-    </li>
-    <li>
-      <Link to="/resume">Resume</Link>
-    </li>
-    <li>
-      <Link to="/about">About Me</Link>
-    </li>
-
-    <Outlet />
+    <div>
+        <div className='nav-bar'>
+            <li className='home-tab'>
+            <Link to="/">Kevin Tierney</Link>
+            </li>
+            <li>
+            <Link to="/projects">Projects</Link>
+            </li>
+            <li>
+            <Link to="/resume">Resume</Link>
+            </li>
+            <li>
+            <Link to="/about">About Me</Link>
+            </li>
+        </div>
+    <div className='page-body'>
+        <Outlet />
+    </div>
   </div>
   );
 }
