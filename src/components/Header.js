@@ -8,7 +8,7 @@ const Header= () =>{
   return (
     <div>
         <div className='nav-bar'>
-            <li>
+            <li className='home-tab'>
             <Link to="/">Kevin Tierney</Link>
             </li>
             <li>
