@@ -22,7 +22,10 @@ export default function Resume() {
             <h1>Certifications</h1>
             <ul>
                 <li>Splunk</li>
-                <li>AWS....</li>
+                <li>AWS Certified DevOps Engineer</li>
+                <li>Docker Certified Associate</li>
+                <li>Certified Kubernetes Administrator</li>
+                <li>Jenkins Certified Engineer</li>
             </ul>
 
             <h1>Links</h1>
