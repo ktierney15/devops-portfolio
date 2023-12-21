@@ -1,0 +1,14 @@
+name: CD
+on:
+  workflow_dispatch:
+  
+  
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+
+
+      # TODO: Add terraform init apply ...
