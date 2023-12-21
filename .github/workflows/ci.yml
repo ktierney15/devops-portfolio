@@ -1,0 +1,74 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+on:
+  push: 
+    branches: ["main"]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+
+  workflow_dispatch:
+
+jobs:
+  CI-React-UI:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up NodeJS environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install package dependencies
+        run: npm install
+
+      - name: Check linting and formatting
+        run: |
+          npm install -g eslint
+          eslint **/src/*.js
+
+      # - name: Execute test cases
+      #   run: npm run test
+      
+      - name: Create test build
+        run: npm run build
+
+
+  # TODO: once terraform is added - run a terraform init and plan
+      
+  Version-and-Publish:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v3
+
+# TODO: add semantic versioning and tagging
+      - name: Version
+        run: exit 1
+
+      - name: tag
+        run: exit 1
+
+############################################
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:${{ env. }}
+
+
+
+
+
+
