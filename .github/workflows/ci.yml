@@ -45,13 +45,22 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v3
+      # - uses: actions/checkout@v3
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
 
     # TODO: add semantic versioning and tagging
       - name: Sign in to Git
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Show Tags
+        run: git tag -l
 
       - name: Get Latest Tag
         id: get-latest-tag
