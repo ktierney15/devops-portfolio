@@ -29,15 +29,18 @@ jobs:
           npm install -g eslint
           eslint **/src/*.js
 
+
+# TODO: create unit testing
       # - name: Execute test cases
       #   run: npm run test
       
       - name: Create test build
         run: npm run build
 
+# TODO: once terraform is added - run a terraform init and plan
 
-  # TODO: once terraform is added - run a terraform init and plan
-      
+
+
   Version-and-Publish:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
@@ -45,27 +48,61 @@ jobs:
       - uses: actions/checkout@v3
 
 # TODO: add semantic versioning and tagging
-      - name: Version
-        run: exit 1
+    - name: Sign in to Git
+      run: |
+        git config user.name "${{ github.actor }}"
+        git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: tag
-        run: exit 1
+      - name: Get Latest Tag
+        id: get-latest-tag
+        run: echo "::set-output name=TAG::$(git describe --tags --abbrev=0)"
+        
+      - name: Print Latest Tag
+        run: echo ${{ steps.get-latest-tag.outputs.TAG }}
+
+      - name: Install jq for parsing commit message
+        run: sudo apt-get update && sudo apt-get install -y jq
+      
+      - name: export github event path as a variable
+        run: echo "GITHUB_EVENT_PATH=$GITHUB_EVENT_PATH" >> $GITHUB_ENV
+
+      - name: create variable for parsed pr title
+        run: |
+          echo "commit_message=$(jq.head_commit.message echo ${{ env.GITHUB_EVENT_PATH }})" >> $GITHUB_ENV
+
+      - name: Set increment type variable
+        run: |
+          if [[ ${{ env.commit_message }} == *"PATCH"* ]]; then
+            echo "version_increment_type=patch" >> $GITHUB_ENV 
+          elif [[ ${{ env.commit_message }} == *"MAJOR"* ]]; then
+            echo "version_increment_type=major" >> $GITHUB_ENV 
+          else
+            echo "version_increment_type=minor" >> $GITHUB_ENV
+      
+      - name: Semantic Versioning
+        run: echo "updated_tag=$(python3 .github/scripts/sem-ver.py ${{ env.version_increment_type }} ${{ steps.get-latest-tag.outputs.TAG }})
+
+      - name: Tag new version
+        run: |
+          git tag ${{ env.updated_tag }}
+          git push origin ${{ env.updated_tag }}
+          
 
 ############################################
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:${{ env. }}
+      # - name: Build and push
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:${{ env. }}
 
 
 

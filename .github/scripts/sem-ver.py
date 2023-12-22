@@ -5,9 +5,9 @@ Description: This script performs sematic versioning
 
 To use this script, you just need to pass in the version type (major, minor, or patch) and the current version.
 examples: 
-    python3 versioning.py 'patch' 'v1.2.1' -> output: 'v1.2.2'
-    python3 versioning.py 'minor' 'v1.2.1' -> output: 'v1.3.0'
-    python3 versioning.py 'major' 'v1.2.1' -> output: 'v2.0.0'
+    python3 sem-ver.py 'patch' 'v1.2.1' -> output: 'v1.2.2'
+    python3 sem-ver.py 'minor' 'v1.2.1' -> output: 'v1.3.0'
+    python3 sem-ver.py 'major' 'v1.2.1' -> output: 'v2.0.0'
     
 """
 
