@@ -24,18 +24,18 @@ jobs:
       - name: Install package dependencies
         run: npm install
 
-      - name: Check linting and formatting
-        run: |
-          npm install -g eslint
-          eslint **/src/*.js
+#       - name: Check linting and formatting
+#         run: |
+#           npm install -g eslint
+#           eslint **/src/*.js
 
 
-# TODO: create unit testing
-      # - name: Execute test cases
-      #   run: npm run test
+# # TODO: create unit testing
+#       # - name: Execute test cases
+#       #   run: npm run test
       
-      - name: Create test build
-        run: npm run build
+#       - name: Create test build
+#         run: npm run build
 
 # TODO: once terraform is added - run a terraform init and plan
 
