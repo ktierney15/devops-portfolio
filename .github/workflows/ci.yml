@@ -47,11 +47,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-# TODO: add semantic versioning and tagging
-    - name: Sign in to Git
-      run: |
-        git config user.name "${{ github.actor }}"
-        git config user.email "${{ github.actor }}@users.noreply.github.com"
+    # TODO: add semantic versioning and tagging
+      - name: Sign in to Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Get Latest Tag
         id: get-latest-tag
