@@ -78,11 +78,17 @@ jobs:
       - name: Semantic Versioning
         run: echo "updated_tag=$(python3 .github/scripts/sem-ver.py ${{ env.version_increment_type }} ${{ steps.get-latest-tag.outputs.TAG }})" >> $GITHUB_ENV
 
-      - name: Tag new version
-        run: |
-          git remote set-url https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
-          git tag ${{ env.updated_tag }}
-          git push origin --tags
+      # - name: Tag new version
+      #   run: |
+      #     git remote set-url origin https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}.git
+      #     git tag ${{ env.updated_tag }}
+      #     git push origin --tags
+
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: ${{ env.updated_tag }}
+          tag_exists_error: false
+          message: "Version ${{ env.updated_tag }}"
           
   # https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} --tags
         # env:
