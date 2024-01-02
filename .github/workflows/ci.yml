@@ -77,12 +77,21 @@ jobs:
 
       - name: Set increment type variable
         run: |
-          if [[ "${{ github.event.head_commit.message }}" == *"PATCH"* ]]; then
+          if [[ $(echo "${{ github.event.head_commit.message }}" | tr -d ' ') == *"PATCH"* ]]; then
             echo "version_increment_type=patch" >> $GITHUB_ENV 
-          elif [[ "${{ github.event.head_commit.message }}" == *"MAJOR"* ]]; then
+          elif [[ $(echo "${{ github.event.head_commit.message }}" | tr -d ' ') == *"MAJOR"* ]]; then
             echo "version_increment_type=major" >> $GITHUB_ENV 
           else
             echo "version_increment_type=minor" >> $GITHUB_ENV
+
+      # - name: Set increment type variable
+      #   run: |
+      #     if [[ "${{ github.event.head_commit.message }}" == *"PATCH"* ]]; then
+      #       echo "version_increment_type=patch" >> $GITHUB_ENV 
+      #     elif [[ "${{ github.event.head_commit.message }}" == *"MAJOR"* ]]; then
+      #       echo "version_increment_type=major" >> $GITHUB_ENV 
+      #     else
+      #       echo "version_increment_type=minor" >> $GITHUB_ENV
       
       - name: Semantic Versioning
         run: echo "updated_tag=$(python3 .github/scripts/sem-ver.py ${{ env.version_increment_type }} ${{ steps.get-latest-tag.outputs.TAG }})
