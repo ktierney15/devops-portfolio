@@ -82,7 +82,7 @@ jobs:
       - name: Tag new version
         run: |
           git tag ${{ env.updated_tag }}
-          git push origin ${{ env.updated_tag }}
+          git push https://${{ secrets.TOKEN }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} --tags
         # env:
         #   GITHUB_TOKEN: ${{ secrets.TOKEN }}
           
