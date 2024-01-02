@@ -53,8 +53,10 @@ jobs:
 
       - name: Sign in to Git
         run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          echo -n "machine github.com login ktierney15 password ${{ secrets.TOKEN }}" > ~/.netrc
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global credential.helper 'store --file ~/.git-credentials'
 
       - name: Get Latest Tag
         id: get-latest-tag
@@ -78,17 +80,10 @@ jobs:
       - name: Semantic Versioning
         run: echo "updated_tag=$(python3 .github/scripts/sem-ver.py ${{ env.version_increment_type }} ${{ steps.get-latest-tag.outputs.TAG }})" >> $GITHUB_ENV
 
-      # - name: Tag new version
-      #   run: |
-      #     git remote set-url origin https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}.git
-      #     git tag ${{ env.updated_tag }}
-      #     git push origin --tags
-
-      - uses: rickstaa/action-create-tag@v1
-        with:
-          tag: ${{ env.updated_tag }}
-          tag_exists_error: false
-          message: "Version ${{ env.updated_tag }}"
+      - name: Tag new version
+        run: |
+          git tag ${{ env.updated_tag }}
+          git push origin --tags
           
   # https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} --tags
         # env:
