@@ -85,10 +85,10 @@ jobs:
           # Get the commit SHA of the merge commit
           MERGE_COMMIT_SHA=$(git log --merges --pretty=format:'%H' -n 1)
 
-          # Get the commit message of the merge commit
-          COMMIT_MESSAGE=$(git log --format=%B -n 1 $MERGE_COMMIT_SHA)
+          # Get the commit title of the merge commit
+          COMMIT_TITLE=$(git log --format=%s -n 1 $MERGE_COMMIT_SHA)
 
-          echo "Commit Message: $COMMIT_MESSAGE"
+          echo "Commit Title: $COMMIT_TITLE"
 
 
       - name: Set increment type variable
