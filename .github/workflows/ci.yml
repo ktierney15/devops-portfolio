@@ -45,30 +45,22 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
-      # - uses: actions/checkout@v3
-
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
 
-    # TODO: add semantic versioning and tagging
       - name: Sign in to Git
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Show Tags
-        run: git tag -l
-
       - name: Get Latest Tag
         id: get-latest-tag
         run: echo "::set-output name=TAG::$(git describe --tags --abbrev=0)"
-        
-      - name: Print Latest Tag
-        run: echo ${{ steps.get-latest-tag.outputs.TAG }}
 
+######## This is where the error is ##################
       - name: Install jq for parsing commit message
         run: sudo apt-get update && sudo apt-get install -y jq
       
