@@ -53,7 +53,6 @@ jobs:
 
       - name: Sign in to Git
         run: |
-          echo -n "machine github.com login ktierney15 password ${{ secrets.TOKEN }}" > ~/.netrc
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
@@ -82,7 +81,7 @@ jobs:
       - name: Tag new version
         run: |
           git tag ${{ env.updated_tag }}
-          git push https://${{ secrets.TOKEN }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} --tags
+          git push https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} --tags
         # env:
         #   GITHUB_TOKEN: ${{ secrets.TOKEN }}
           
