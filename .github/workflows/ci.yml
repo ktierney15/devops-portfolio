@@ -45,39 +45,35 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
-      # - uses: actions/checkout@v3
-
       - name: Checkout Repository
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
 
-    # TODO: add semantic versioning and tagging
       - name: Sign in to Git
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Show Tags
-        run: git tag -l
-
       - name: Get Latest Tag
         id: get-latest-tag
         run: echo "::set-output name=TAG::$(git describe --tags --abbrev=0)"
-        
-      - name: Print Latest Tag
-        run: echo ${{ steps.get-latest-tag.outputs.TAG }}
 
-      - name: Install jq for parsing commit message
-        run: sudo apt-get update && sudo apt-get install -y jq
+######## This is where the error is ##################
+      # - name: Install jq for parsing commit message
+      #   run: sudo apt-get update && sudo apt-get install -y jq
       
-      - name: export github event path as a variable
-        run: echo "GITHUB_EVENT_PATH=$GITHUB_EVENT_PATH" >> $GITHUB_ENV
+      # - name: export github event path as a variable
+      #   run: echo "GITHUB_EVENT_PATH=$GITHUB_EVENT_PATH" >> $GITHUB_ENV
 
-      - name: create variable for parsed pr title
+      # - name: create variable for parsed pr title
+      #   run: |
+      #     echo "commit_message=$(jq.head_commit.message echo ${{ env.GITHUB_EVENT_PATH }})" >> $GITHUB_ENV
+
+      - name: set commit message variable
         run: |
-          echo "commit_message=$(jq.head_commit.message echo ${{ env.GITHUB_EVENT_PATH }})" >> $GITHUB_ENV
+          echo "commit_message=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
 
       - name: Set increment type variable
         run: |
