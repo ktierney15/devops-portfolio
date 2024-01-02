@@ -82,13 +82,9 @@ jobs:
 
       - name: Get commit message
         run: |
-          # Get the commit SHA of the merge commit
           MERGE_COMMIT_SHA=$(git log --merges --pretty=format:'%H' -n 1)
+          echo "commit_message=$(git log --format=%s -n 1 $MERGE_COMMIT_SHA)" >> $GITHUB_ENV
 
-          # Get the commit title of the merge commit
-          COMMIT_TITLE=$(git log --format=%s -n 1 $MERGE_COMMIT_SHA)
-
-          echo "Commit Title: $COMMIT_TITLE"
 
 
       - name: Set increment type variable
