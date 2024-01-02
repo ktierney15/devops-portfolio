@@ -80,7 +80,7 @@ jobs:
 
       - name: Tag new version
         run: |
-          git remote set-url https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          git remote set-url origin https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}.git
           git tag ${{ env.updated_tag }}
           git push origin --tags
           
