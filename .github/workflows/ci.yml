@@ -60,50 +60,19 @@ jobs:
         id: get-latest-tag
         run: echo "::set-output name=TAG::$(git describe --tags --abbrev=0)"
 
-######## This is where the error is ##################
-      # - name: Install jq for parsing commit message
-      #   run: sudo apt-get update && sudo apt-get install -y jq
-      
-      # - name: export github event path as a variable
-      #   run: echo "GITHUB_EVENT_PATH=$GITHUB_EVENT_PATH" >> $GITHUB_ENV
-
-      # - name: create variable for parsed pr title
-      #   run: |
-      #     echo "commit_message=$(jq.head_commit.message echo ${{ env.GITHUB_EVENT_PATH }})" >> $GITHUB_ENV
-
-      # - name: Logging
-      #   run: |
-      #     echo "${{toJSON(github.event)}}"
-
-
-      # - name: set commit message variable
-      #   run: |
-      #     echo "commit_message=$(echo "${{ github.event.head_commit.message }}" | tr -d ' ')" >> $GITHUB_ENV
-
       - name: Get commit message
         run: |
           MERGE_COMMIT_SHA=$(git log --merges --pretty=format:'%H' -n 1)
           echo "commit_message=$(git log --format=%s -n 1 $MERGE_COMMIT_SHA)" >> $GITHUB_ENV
 
-
-
       - name: Set increment type variable
         run: |
-          if [[ ${{ env.commit_message }} == *"PATCH"* ]]; then
+          if [[ "${{ env.commit_message }}" == *"PATCH"* ]]; then
             echo "version_increment_type=patch" >> $GITHUB_ENV 
-          elif [[ ${{ env.commit_message }} == *"MAJOR"* ]]; then
+          elif [[ "${{ env.commit_message }}" == *"MAJOR"* ]]; then
             echo "version_increment_type=major" >> $GITHUB_ENV 
           else
             echo "version_increment_type=minor" >> $GITHUB_ENV
-
-      # - name: Set increment type variable
-      #   run: |
-      #     if [[ "${{ github.event.head_commit.message }}" == *"PATCH"* ]]; then
-      #       echo "version_increment_type=patch" >> $GITHUB_ENV 
-      #     elif [[ "${{ github.event.head_commit.message }}" == *"MAJOR"* ]]; then
-      #       echo "version_increment_type=major" >> $GITHUB_ENV 
-      #     else
-      #       echo "version_increment_type=minor" >> $GITHUB_ENV
       
       - name: Semantic Versioning
         run: echo "updated_tag=$(python3 .github/scripts/sem-ver.py ${{ env.version_increment_type }} ${{ steps.get-latest-tag.outputs.TAG }})
