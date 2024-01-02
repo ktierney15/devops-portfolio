@@ -71,15 +71,15 @@ jobs:
       #   run: |
       #     echo "commit_message=$(jq.head_commit.message echo ${{ env.GITHUB_EVENT_PATH }})" >> $GITHUB_ENV
 
-      # - name: set commit message variable
-      #   run: |
-      #     echo 'commit_message="${{ github.event.head_commit.message }}"' >> $GITHUB_ENV
+      - name: set commit message variable
+        run: |
+          echo "commit_message=$(echo "${{ github.event.head_commit.message }}" | tr -d ' ')" >> $GITHUB_ENV
 
       - name: Set increment type variable
         run: |
-          if [[ $(echo "${{ github.event.head_commit.message }}" | tr -d ' ') == *"PATCH"* ]]; then
+          if [[ ${{ env.commit_message }} == *"PATCH"* ]]; then
             echo "version_increment_type=patch" >> $GITHUB_ENV 
-          elif [[ $(echo "${{ github.event.head_commit.message }}" | tr -d ' ') == *"MAJOR"* ]]; then
+          elif [[ ${{ env.commit_message }} == *"MAJOR"* ]]; then
             echo "version_increment_type=major" >> $GITHUB_ENV 
           else
             echo "version_increment_type=minor" >> $GITHUB_ENV
