@@ -85,10 +85,6 @@ jobs:
           git tag ${{ env.updated_tag }}
           git push origin --tags
           
-  # https://ktierney15:${{ secrets.PASSWORD }}@github.com/${{ github.repository_owner }}/${{ github.event.repository.name }} --tags
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          
 ############################################
 
       # - name: Login to DockerHub
