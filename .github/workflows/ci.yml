@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Build:
+  React-Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -32,15 +32,31 @@ jobs:
 #       # - name: Execute test cases
 #       #   run: npm run test
       
-#       - name: Create test build
-#         run: npm run build
+      - name: Create test build
+        run: npm run build
 
 # TODO: once terraform is added - run a terraform init and plan
+  Terraform-Build:
+    needs: React-Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
 
+      - name: setup terraform
+        run: echo
+      
+      - name: terraform init
+        run: echo
 
+      - name: terraform plan
+        run: echo
 
   Version-and-Publish:
-    needs: Build
+    needs: Terraform-Build
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
