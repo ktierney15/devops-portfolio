@@ -47,7 +47,9 @@ jobs:
           ref: ${{ github.sha }}
       
       - name: move to IAC directory 
-        run: cd IAC
+        run: |
+          cd IAC
+          ls
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
