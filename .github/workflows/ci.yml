@@ -45,9 +45,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.sha }}
-      
-      - name: cd to IAC
-        run: cd IAC
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
@@ -57,11 +54,14 @@ jobs:
       - name: Configure AWS credentials
         run: echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}\nAWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" > $GITHUB_ENV
 
-      - name: Initialize Terraform
-        run: terraform init
+      # - name: Initialize Terraform
+      #   run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan -var-file=./main.tf
+        run: |
+          cd IAC
+          terraform init
+          terraform plan
 
   Version-and-Publish:
     needs: Terraform-Build
