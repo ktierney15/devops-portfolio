@@ -24,8 +24,8 @@ data "cloudinit_config" "server_config" {
     content_type = "text/cloud-config"
     content      = templatefile("${path.module}/templates/cloud-init.yaml",
       {
-        playbook      = base64_encode(file("${path.module}/playbooks/playbook.ansible.yaml"))
-        playbook_vars = base64_encode(jsonencode(local.playbook_vars))
+        playbook      = base64encode(file("${path.module}/playbooks/playbook.ansible.yaml"))
+        playbook_vars = base64encode(jsonencode(local.playbook_vars))
       }
     )
   }
