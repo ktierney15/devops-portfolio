@@ -9,8 +9,28 @@ resource "aws_instance" "test" {
   instance_type = "t2.micro"
 }
 
+locals {
+  playbook_vars = {
+    placeholder = var.placeholder
+  }
+}
 
 
+data "cloudinit_config" "server_config" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    content_type = "text/cloud-config"
+    content      = templatefile("${path.module}/templates/cloud-init.yaml",
+      {
+        playbook      = base64_encode(file("${path.module}/playbooks/playbook.ansible.yaml"))
+        playbook_vars = base64_encode(jsonencode(local.playbook_vars))
+      }
+    )
+  }
+
+}
 
 
 # provider "aws" {

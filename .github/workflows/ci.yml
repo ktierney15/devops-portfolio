@@ -35,7 +35,6 @@ jobs:
       # - name: Create test build
       #   run: npm run build
 
-# TODO: once terraform is added - run a terraform init and plan
   Terraform-Build:
     needs: React-Build
     runs-on: ubuntu-latest
