@@ -2,9 +2,8 @@
 This website serves as both an overview of all of my projects and one of my projects
 
 ## CI/CD
-----------
 This project contains CI and CD pipelines.
- 
+
 Since I am only working with one environment I decided I want to manually trigger the CD pipeline every time I want to delpoy the application. 
 
 ### CI Steps
@@ -16,13 +15,11 @@ Since I am only working with one environment I decided I want to manually trigge
 
 
 ## Branching strategy
-----------
 The branching strategy employed for this repository is simple because I am the only one pushing changes to this repository. 
 
 There are two branches: main and develop. I push all of my changes to the develop branch and when the branch is ready to be pushed to production I create a pull request to the main branch. Once the pr checks pass I then merge to main which pushes the latest image to docker hub
 
 ## Infrastructure as Code
-----------
 For this project I wanted to showcase my proficency in both Terraform and Docker. I could have decided to host this application in AWS ECR, but I decided to provision an EC2 instance, install docker on it and run the image on the EC2 just to cover more topics with this project
 
 
