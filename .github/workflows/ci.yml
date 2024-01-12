@@ -32,8 +32,8 @@ jobs:
 #       # - name: Execute test cases
 #       #   run: npm run test
       
-      # - name: Create test build
-      #   run: npm run build
+      - name: Create test build
+        run: npm run build
 
   Terraform-Build:
     needs: React-Build
