@@ -1,0 +1,7 @@
+- name: Deploy Application
+  hosts: localhost
+  connection: local
+  become: true
+
+# todo: create playbook that installs docker, pulls image,
+#       and runs the containter

@@ -1,0 +1,23 @@
+#cloud-config
+
+# swap:
+#   filename: /swap.img
+#   size: auto
+#   maxsize: 4294967296
+
+write-files:
+  - path: /run/kt-devops-portfolio/playbook.ansible.yaml
+    owner: root:root
+    premissions: "0644"
+    encoding: b64
+    content: ${playbook}
+  - path: /run/kt-devops-portfolio/playbook.vars.json
+    owner: root:root
+    premissions: "0644"
+    encoding: b64
+    content: ${playbook_vars}
+
+
+runcmd:
+  - dnf -y upgrade
+  - ansible-playbook -c local -i localhost, --extra-vars @/run/kt-devops-portfolio/playbook.vars.json /run/kt-devops-portfolio/playbook.ansible.yaml
