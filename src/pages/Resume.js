@@ -16,6 +16,26 @@ export default function Resume() {
   return (
     <ResumeContainer>
       <ResumeSection>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white', flexGrow: 1, textAlign: 'left' }}>Experience</Typography>
+        <List>
+          <p2>Healthfirst</p2>
+          <ListItem>
+            <ListItemText primary="DevOps Engineer (Janurary 2024 - present)" secondary="Contributed to" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Application Developer" secondary="Contributed to" />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="DevOps Intern" secondary="Contributed to" />
+          </ListItem>
+          <p2>Treehouse Strategy and Communications</p2>
+          <ListItem>
+            <ListItemText primary="Front-end React Development Intern" secondary="Contributed to" />
+          </ListItem>
+        </List>
+      </ResumeSection>
+
+      <ResumeSection>
         <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'white', flexGrow: 1, textAlign: 'left' }}>Skills</Typography>
         <List>
           <ListItem>
