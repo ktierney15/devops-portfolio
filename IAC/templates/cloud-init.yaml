@@ -19,5 +19,6 @@ write-files:
 
 
 runcmd:
-  - dnf -y upgrade
+  - yum -y update
+  - yum install ansible
   - ansible-playbook -c local -i localhost, --extra-vars @/run/kt-devops-portfolio/playbook.vars.json /run/kt-devops-portfolio/playbook.ansible.yaml
