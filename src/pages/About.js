@@ -11,17 +11,16 @@ const AboutMe = () => {
         // style={{ borderRadius: '50%', maxWidth: '100%', marginBottom: '20px' }}
         style={{ borderRadius: '50%', width: '50%', maxWidth: '100%', marginBottom: '20px' }}
       />
-      <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
-        My name is Kevin Tierney, and I am a Software Engineer who specializes in DevOps. I studied Computer Science at Elon University, where I discovered my
-        passion for Software Engineering. I origionally was intending to study business, but I tried a computer science course in the spring of my freshman year and 
+      <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}> My name is Kevin Tierney, and I am a Software Engineer who specializes in DevOps. I studied Computer Science at Elon University, where I discovered my
+        passion for Software Engineering. I originally was intending to study business, but I tried a computer science course in the spring of my freshman year and 
         never turned back. After building foundational skills, I took on an internship during the spring of my junior year contributing to the React frontend of a 
-        startup companies customer portal. I really enjoyed my breif time working in frontend applications and at the time that is what I wanted to pursue. In preperation
+        startup companies customer portal. I really enjoyed my brief time working in frontend applications and at the time that is what I wanted to pursue. In preparation
         for this I started creating websites, mostly that would go nowhere but were great practice. The capstone of this series of projects was a blog website for 
         my girlfriend, who at the time was applying for jobs in the journalism industry. This website was both a place where readers can check out her articles, as well
         as a content management system for her to upload articles. These projects likely contributed to getting an interview for my next internship that summer, which was
         for the company I work for today. Little did I know this interview was not for a frontend position, but a DevOps position. 
       </p>
-
+      
       <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
         I did not know much about devops and it was apparent on the interview, but I did have some expereince developing and deploying applications and I did well on the programming 
         portion so they gave me an amazing opprotunity to learn DevOps and work for an amazing company. In the following years I focused all of my energy on
