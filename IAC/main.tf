@@ -11,7 +11,8 @@ resource "aws_instance" "test" {
 
 locals {
   playbook_vars = {
-    placeholder = var.placeholder
+    docker_user = lookup(var, "docker_user", "username")
+    docker_pass = lookup(var, "docker_pass", "password")
   }
 }
 

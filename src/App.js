@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header"
+import Footer from './components/Footer';
 
 import Home from "./pages/Home"
 import Projects from "./pages/Projects"
@@ -13,7 +14,7 @@ import About from "./pages/About"
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header" style={{ paddingBottom: '56px' }} >
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Header />}>
@@ -24,10 +25,10 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      <div>
-
-      </div>
       </header>
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 }
