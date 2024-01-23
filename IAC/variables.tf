@@ -8,7 +8,12 @@ variable "aws_secret_key" {
   default     = ""
 }
 
-variable "placeholder" {
-  description = "placeholder cloud init variable"
+variable "docker_user" {
+  description = "dockerhub username user"
+  default     = ""
+}
+
+variable "docker_pass" {
+  description = "dockerhub password"
   default     = ""
 }

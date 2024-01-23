@@ -35,8 +35,8 @@ tasks:
 
     - name: Log in to Docker Hub
       docker_login:
-        username: dockerhub_user
-        password: dockerhub_password
+        username: {{ dockerhub_user }}
+        password: {{ dockerhub_password }}
 
     - name: Pull Docker image
       docker_image:
