@@ -3,5 +3,50 @@
   connection: local
   become: true
 
-# todo: create playbook that installs docker, pulls image,
-#       and runs the containter
+tasks:
+#  expose port to the internet so applciation can be reached
+  - name: Add iptables rule to allow incoming traffic on port 80
+      iptables:
+        chain: INPUT
+        in_interface: any
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+
+  - name: Save iptables rules
+    command: service iptables save
+    become: yes
+
+  - name: Restart iptables service
+    systemd:
+      name: iptables
+      state: restarted
+
+# download and run applicaiton 
+  - name: Install Docker
+    package:
+      name: docker
+      state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+
+    - name: Log in to Docker Hub
+      docker_login:
+        username: {{ dockerhub_user }}
+        password: {{ dockerhub_password }}
+
+    - name: Pull Docker image
+      docker_image:
+        name: ktierney15/devops_portfolio:latest
+        source: pull
+
+    - name: Run Docker container
+      docker_container:
+        name: devops_portfolio
+        image: ktierney15/devops_portfolio:latest
+        state: started
+        ports:
+          - "3000:80"
