@@ -4,8 +4,8 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
-resource "aws_instance" "test" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
+resource "aws_instance" "host" {
+  ami           = "ami-0a9a47155910e782f"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
   instance_type = "t2.micro"
 }
 
