@@ -4,8 +4,22 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
+data "aws_ami" "amazon-linux-2" {
+ most_recent = true
+
+ filter {
+   name   = "owner-alias"
+   values = ["amazon"]
+ }
+
+ filter {
+   name   = "name"
+   values = ["amzn2-ami-hvm*"]
+ }
+}
+
 resource "aws_instance" "host" {
-  ami           = "ami-0a9a47155910e782f"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
+  ami           = "${data.aws_ami.amazon-linux-2.id}"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
   instance_type = "t2.micro"
 }
 
