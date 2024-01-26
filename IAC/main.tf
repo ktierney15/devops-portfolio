@@ -18,9 +18,54 @@ data "aws_ami" "amazon-linux-2" {
  }
 }
 
+resource "aws_security_group" "instance_sg" {
+  name        = "instance_sg"
+  description = "Security group for EC2 instance"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["your_ip_address/32"]  # Restrict SSH access to your IP address
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow outbound traffic to all destinations
+  }
+}
+
+resource "aws_iam_role" "ssm_role" {
+  name               = "ssm_role"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
+  role       = aws_iam_role.ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+
+
+
 resource "aws_instance" "host" {
-  ami           = "${data.aws_ami.amazon-linux-2.id}"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
-  instance_type = "t2.micro"
+  ami                  = "${data.aws_ami.amazon-linux-2.id}"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
+  instance_type        = "t2.micro"
+  security_groups      = [aws_security_group.instance_sg.name]
+  iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
 }
 
 locals {
