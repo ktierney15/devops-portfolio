@@ -34,7 +34,9 @@ For this project I wanted to showcase my proficency in both Terraform and Docker
 These are the commands you have to run if you want to manually delete the infrastructure
 
 ```bash
-aws iam delete-user --user-name 'ssm_role'
+aws iam remove-role-from-instance-profile --instance-profile-name 'ssm_instance_profile' --role-name 'ssm_role'
+aws iam detach-role-policy --role-name 'ssm_role' --policy-arn 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore'
+aws iam delete-role --role-name 'ssm_role'
 aws iam delete-instance-profile --instance-profile-name 'ssm_instance_profile'
 aws ec2 terminate-instances --instance-ids <instance-id>
 ```
