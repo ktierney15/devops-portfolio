@@ -1,11 +1,13 @@
 - name: Deploy Application
   hosts: localhost
   connection: local
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   become: true
 
-tasks:
-#  expose port to the internet so applciation can be reached
-  - name: Add iptables rule to allow incoming traffic on port 80
+  tasks:
+  #  expose port to the internet so applciation can be reached
+    - name: Add iptables rule to allow incoming traffic on port 80
       iptables:
         chain: INPUT
         in_interface: any
@@ -13,25 +15,67 @@ tasks:
         destination_port: 80
         jump: ACCEPT
 
-  - name: Save iptables rules
-    command: service iptables save
-    become: yes
+    - name: Save iptables rules
+      shell: iptables-save > /etc/sysconfig/iptables
 
-  - name: Restart iptables service
-    systemd:
-      name: iptables
-      state: restarted
+    # - name: Restart iptables service
+    #   systemd:
+    #     name: iptables
+    #     state: restarted
+    # - name: Restart iptables service
+    #   service:
+    #     name: iptables
+    #     state: restarted
 
-# download and run applicaiton 
-  - name: Install Docker
-    package:
-      name: docker
-      state: present
+    # - name: Install Docker SDK for Python
+    #   pip:
+    #     name: docker
+    #     executable: pip3
+
+  # download and run applicaiton 
+    # - name: Install Docker
+    #   package:
+    #     name: docker
+    #     state: present
+    # - name: Install Docker package
+    #   yum:
+    #     name: docker-ce 
+    #     state: present
+    - name: Remove existing Docker packages
+      yum:
+        name: docker
+        state: absent
+
+    - name: Install required packages for Docker
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+
+    - name: Add Docker CE repository
+      yum_repository:
+        name: docker-ce
+        description: Docker CE Repository
+        baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/centos/gpg
+        enabled: yes
+
+    - name: Install Docker CE
+      yum:
+        name: docker-ce
+        state: present
+      ignore_errors: yes
+
 
     - name: Start Docker service
       service:
         name: docker
         state: started
+        enabled: yes
 
     - name: Log in to Docker Hub
       docker_login:
@@ -49,4 +93,4 @@ tasks:
         image: ktierney15/devops_portfolio:latest
         state: started
         ports:
-          - "3000:80"
+        - "3000:80"

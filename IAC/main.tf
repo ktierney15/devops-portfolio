@@ -4,6 +4,7 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
+# Amazon Linux 2 AMI (HVM), SSD Volume Type
 data "aws_ami" "amazon-linux-2" {
  most_recent = true
 
@@ -16,6 +17,23 @@ data "aws_ami" "amazon-linux-2" {
    name   = "name"
    values = ["amzn2-ami-hvm*"]
  }
+}
+
+# User Data to run ansible playbook
+data "cloudinit_config" "server_config" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    content_type = "text/cloud-config"
+    content      = templatefile("${path.module}/templates/cloud-init.yaml",
+      {
+        playbook      = base64encode(file("${path.module}/playbooks/playbook.ansible.yaml"))
+        playbook_vars = base64encode(jsonencode(local.playbook_vars))
+      }
+    )
+  }
+
 }
 
 # IAM role for session manager
@@ -46,9 +64,10 @@ resource "aws_iam_instance_profile" "ssm_instance_profile" {
 }
 
 resource "aws_instance" "host" {
-  ami                  = "${data.aws_ami.amazon-linux-2.id}"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
+  ami                  = "${data.aws_ami.amazon-linux-2.id}"
   instance_type        = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
+  user_data            = data.cloudinit_config.server_config.rendered
 }
 
 locals {
@@ -57,47 +76,3 @@ locals {
     docker_pass = var.docker_pass
   }
 }
-
-
-data "cloudinit_config" "server_config" {
-  gzip          = true
-  base64_encode = true
-
-  part {
-    content_type = "text/cloud-config"
-    content      = templatefile("${path.module}/templates/cloud-init.yaml",
-      {
-        playbook      = base64encode(file("${path.module}/playbooks/playbook.ansible.yaml"))
-        playbook_vars = base64encode(jsonencode(local.playbook_vars))
-      }
-    )
-  }
-
-}
-
-
-# provider "aws" {
-#   region = "us-east-1"
-# }
-
-# resource "aws_instance" "example" {
-#   ami           = "ami-xxxxxxxxxxxxxxxxx"
-#   instance_type = "t2.micro"
-#   key_name      = "your-key-pair-name"
-#   subnet_id     = "subnet-xxxxxxxxxxxxxxxxx" # Specify your subnet ID
-
-#   security_group_names = ["your-security-group-name"]
-
-#   user_data = <<-EOF
-#               #!/bin/bash
-#               # Your user data script here
-#               EOF
-
-#   tags = {
-#     Name = "example-instance"
-#   }
-# }
-
-# output "instance_public_ip" {
-#   value = aws_instance.example.public_ip
-# }
