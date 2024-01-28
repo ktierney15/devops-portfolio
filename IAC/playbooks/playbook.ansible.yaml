@@ -55,6 +55,27 @@
         - device-mapper-persistent-data
         - lvm2
 
+    - name: Add additional repositories
+      yum_repository:
+        name: "{{ item.name }}"
+        description: "{{ item.description }}"
+        baseurl: "{{ item.baseurl }}"
+        enabled: yes
+      loop:
+        - { name: 'epel', description: 'Extra Packages for Enterprise Linux 7 - $basearch', baseurl: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' }
+      ignore_errors: yes
+
+    - name: Install required packages
+      yum:
+        name: "{{ item.name }}"
+        state: present
+      loop:
+        - { name: 'container-selinux', version: '>= 2:2.74' }
+        - { name: 'slirp4netns', version: '>= 0.4' }
+        - { name: 'fuse-overlayfs', version: '>= 0.7' }
+        - { name: 'containerd.io', version: '>= 1.6.24' }
+      ignore_errors: yes
+
     - name: Add Docker CE repository
       yum_repository:
         name: docker-ce
@@ -68,7 +89,6 @@
       yum:
         name: docker-ce
         state: present
-      ignore_errors: yes
 
 
     - name: Start Docker service
@@ -79,8 +99,8 @@
 
     - name: Log in to Docker Hub
       docker_login:
-        username: {{ dockerhub_user }}
-        password: {{ dockerhub_password }}
+        username: "{{ dockerhub_user }}"
+        password: "{{ dockerhub_password }}"
 
     - name: Pull Docker image
       docker_image:
