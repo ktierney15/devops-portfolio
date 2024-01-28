@@ -25,3 +25,16 @@ There are two branches: main and develop. I push all of my changes to the develo
 For this project I wanted to showcase my proficency in both Terraform and Docker. I could have decided to host this application in AWS ECR, but I decided to provision an EC2 instance, install docker on it and run the image on the EC2 just to cover more topics with this project
 
 
+
+
+
+
+-----------------
+# Deleting the infrastructure via CLI
+These are the commands you have to run if you want to manually delete the infrastructure
+
+```bash
+aws iam delete-user --user-name 'ssm_role'
+aws iam delete-instance-profile --instance-profile-name 'ssm_instance_profile'
+aws ec2 terminate-instances --instance-ids <instance-id>
+```

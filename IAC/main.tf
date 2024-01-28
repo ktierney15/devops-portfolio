@@ -68,6 +68,7 @@ resource "aws_instance" "host" {
   instance_type        = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
   user_data            = data.cloudinit_config.server_config.rendered
+  key_name             = "default-ec2"
 }
 
 locals {
