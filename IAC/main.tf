@@ -36,6 +36,32 @@ data "cloudinit_config" "server_config" {
 
 }
 
+
+resource "aws_security_group" "server_group" {
+  name        = "server_group"
+  description = "Allow HTTP traffic"
+
+  vpc_id = aws_vpc.example.id
+
+  // Define inbound rule to allow HTTP traffic from any source
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // Define outbound rule to allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
 # IAM role for session manager
 resource "aws_iam_role" "ssm_role" {
   name               = "ssm_role"
@@ -69,6 +95,8 @@ resource "aws_instance" "host" {
   iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
   user_data            = data.cloudinit_config.server_config.rendered
   key_name             = "default-ec2"
+
+  vpc_security_group_ids = [aws_security_group.server_group.id] 
 }
 
 locals {
