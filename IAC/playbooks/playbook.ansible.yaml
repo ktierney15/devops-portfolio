@@ -32,6 +32,67 @@
     #     name: docker
     #     executable: pip3
 
+    # Ansible playbook AWS - install docker (2021)
+    - name: Update all packages
+      yum:
+        name: '*'
+        state: latest
+        update_only: yes
+
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - python-pip
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+        - amazon-linux-extras
+
+    - name: Add extras repository
+      shell: yum-config-manager --enable extras
+
+    - name: Enable Some packages from amazon-linux-extras packages
+      shell: "amazon-linux-extras enable python3.8 ansible2 docker"
+
+    - name: clean yum metadata cache
+      command: yum clean metadata
+      args:
+        warn: false
+
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - python3.8
+        - ansible
+        - docker
+
+    - name: Enable Docker CE service at startup
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Upgrade pip3
+      shell: "python3.8 -m pip install pip --upgrade"
+
+    - name: Ensure Python pip packages are installed
+      pip:
+        name: "{{ packages }}"
+        executable: /usr/local/bin/pip3.8
+      vars:
+        packages:
+        - boto
+        - boto3
+        - docker-compose
+
   # download and run applicaiton 
     # - name: Install Docker
     #   package:
@@ -41,61 +102,57 @@
     #   yum:
     #     name: docker-ce 
     #     state: present
-    - name: Remove existing Docker packages
-      yum:
-        name: docker
-        state: absent
 
-    - name: Install required packages for Docker
-      yum:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - yum-utils
-        - device-mapper-persistent-data
-        - lvm2
+    # - name: Install required packages for Docker
+    #   yum:
+    #     name: "{{ item }}"
+    #     state: present
+    #   loop:
+    #     - yum-utils
+    #     - device-mapper-persistent-data
+    #     - lvm2
 
-    - name: Add additional repositories
-      yum_repository:
-        name: "{{ item.name }}"
-        description: "{{ item.description }}"
-        baseurl: "{{ item.baseurl }}"
-        enabled: yes
-      loop:
-        - { name: 'epel', description: 'Extra Packages for Enterprise Linux 7 - $basearch', baseurl: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' }
-      ignore_errors: yes
+    # - name: Add additional repositories
+    #   yum_repository:
+    #     name: "{{ item.name }}"
+    #     description: "{{ item.description }}"
+    #     baseurl: "{{ item.baseurl }}"
+    #     enabled: yes
+    #   loop:
+    #     - { name: 'epel', description: 'Extra Packages for Enterprise Linux 7 - $basearch', baseurl: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm' }
+    #   ignore_errors: yes
 
-    - name: Install required packages
-      yum:
-        name: "{{ item.name }}"
-        state: present
-      loop:
-        - { name: 'container-selinux', version: '>= 2:2.74' }
-        - { name: 'slirp4netns', version: '>= 0.4' }
-        - { name: 'fuse-overlayfs', version: '>= 0.7' }
-        - { name: 'containerd.io', version: '>= 1.6.24' }
-      ignore_errors: yes
+    # - name: Install required packages
+    #   yum:
+    #     name: "{{ item.name }}"
+    #     state: present
+    #   loop:
+    #     - { name: 'container-selinux', version: '>= 2:2.74' }
+    #     - { name: 'slirp4netns', version: '>= 0.4' }
+    #     - { name: 'fuse-overlayfs', version: '>= 0.7' }
+    #     - { name: 'containerd.io', version: '>= 1.6.24' }
+    #   ignore_errors: yes
 
-    - name: Add Docker CE repository
-      yum_repository:
-        name: docker-ce
-        description: Docker CE Repository
-        baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
-        gpgcheck: yes
-        gpgkey: https://download.docker.com/linux/centos/gpg
-        enabled: yes
+    # - name: Add Docker CE repository
+    #   yum_repository:
+    #     name: docker-ce
+    #     description: Docker CE Repository
+    #     baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    #     gpgcheck: yes
+    #     gpgkey: https://download.docker.com/linux/centos/gpg
+    #     enabled: yes
 
-    - name: Install Docker CE
-      yum:
-        name: docker-ce
-        state: present
+    # - name: Install Docker CE
+    #   yum:
+    #     name: docker-ce
+    #     state: present
 
 
-    - name: Start Docker service
-      service:
-        name: docker
-        state: started
-        enabled: yes
+    # - name: Start Docker service
+    #   service:
+    #     name: docker
+    #     state: started
+    #     enabled: yes
 
     - name: Log in to Docker Hub
       docker_login:

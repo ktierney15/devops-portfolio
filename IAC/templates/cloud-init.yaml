@@ -20,7 +20,6 @@ write_files:
 
 runcmd:
   - yum -y update
-  - amazon-linux-extras install epel -y
   - yum install ansible -y
   - ansible-playbook -c local -i localhost, --extra-vars @/run/kt-devops-portfolio/playbook.vars.json /run/kt-devops-portfolio/playbook.ansible.yaml
   - rm /var/run/kt-devops-portfolio/playbook.vars.json
