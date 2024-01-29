@@ -41,7 +41,7 @@ resource "aws_security_group" "server_group" {
   name        = "server_group"
   description = "Allow HTTP traffic"
 
-  vpc_id = aws_vpc.example.id
+  vpc_id = aws_vpc.server_group.id
 
   // Define inbound rule to allow HTTP traffic from any source
   ingress {
