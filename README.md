@@ -38,5 +38,6 @@ aws iam remove-role-from-instance-profile --instance-profile-name 'ssm_instance_
 aws iam detach-role-policy --role-name 'ssm_role' --policy-arn 'arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore'
 aws iam delete-role --role-name 'ssm_role'
 aws iam delete-instance-profile --instance-profile-name 'ssm_instance_profile'
+aws ec2 delete-security-group --group-id <group-id>
 aws ec2 terminate-instances --instance-ids <instance-id>
 ```
