@@ -2,8 +2,8 @@ name: Destroy
 on:
   workflow_dispatch:
 
-Destroy:
-    needs: Pre-Check
+jobs:
+  Destroy:
     runs-on: ubuntu-latest
     env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
