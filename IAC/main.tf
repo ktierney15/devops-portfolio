@@ -100,6 +100,20 @@ resource "aws_instance" "host" {
   }
 }
 
+# # Allocate Elastic IP
+# resource "aws_eip" "eip" {
+#   instance = aws_instance.host.id
+# }
+
+# # Create DNS record in Route 53
+# resource "aws_route53_record" "eip" {
+#   zone_id = var.route53_zone_id # figure out what this is
+#   name    = "kevintierney.com"
+#   type    = "A"
+#   ttl     = "300"
+#   records = [aws_eip.eip.public_ip]
+# }
+
 locals {
   playbook_vars = {
     docker_user = var.docker_user
