@@ -95,6 +95,9 @@ resource "aws_instance" "host" {
   key_name             = "default-ec2"
 
   vpc_security_group_ids = [aws_security_group.server_group.id] 
+  tags = {
+    Name = "devops_portfolio"
+  }
 }
 
 locals {
