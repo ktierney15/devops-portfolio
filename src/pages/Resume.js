@@ -102,9 +102,8 @@ export default function Resume() {
             <ListItemText primary="LinkedIn" />
           </ListItem>
         </List>
-      </ResumeSection>
-
-    </ResumeContainer>
+      </ResumeSection>  
+      </ResumeContainer>
   );
 }
 
