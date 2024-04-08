@@ -7,7 +7,7 @@ const Home = () =>{
             <div>
 
             </div>
-            {/* Quick overview of one of two projects with a link to the proejcts tab */}
+            {/* Quick overview of one or two projects with a link to the proejcts tab */}
             <div>
                 
             </div>
