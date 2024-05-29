@@ -11,7 +11,7 @@ const Home = () =>{
             <div>
                 
             </div>
-            {/* Link to resume section as well as some common links - github, linkedin, stack overflow? */}
+            {/* Link to Knowledge base section as well as some common links - github, linkedin, stack overflow? */}
             <div>
                 
             </div>

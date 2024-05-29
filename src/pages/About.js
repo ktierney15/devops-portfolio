@@ -1,4 +1,5 @@
 import React from 'react';
+import headshot from '../assets/headshot.jpg';
 
 const AboutMe = () => {
   return (
@@ -6,7 +7,7 @@ const AboutMe = () => {
       {/* Picture of myself right here */}
       {/* Assuming you have an image file, replace 'your_image.jpg' with the actual file path */}
       <img
-        src="https://media.licdn.com/dms/image/C5603AQENL8nPzNtwWQ/profile-displayphoto-shrink_800_800/0/1598905697996?e=1710374400&v=beta&t=OjgXmuaSfBDa6qpzIp_1J3UNmkAWxJluYV3hMr-Lx1A"
+        src={headshot}
         alt="Kevin Tierney"
         // style={{ borderRadius: '50%', maxWidth: '100%', marginBottom: '20px' }}
         style={{ borderRadius: '50%', width: '50%', maxWidth: '100%', marginBottom: '20px' }}
@@ -22,27 +23,22 @@ const AboutMe = () => {
       </p>
       
       <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
-        I did not know much about devops and it was apparent on the interview, but I did have some expereince developing and deploying applications and I did well on the programming 
-        portion so they gave me an amazing opprotunity to learn DevOps and work for an amazing company. In the following years I focused all of my energy on
-        learning the principles and platforms that DevOps revolves around. CI/CD, contanerization, infrastructure as code, configuration as code, the cloud,
-        system administrationn, and the list goes on. I really loved application development, but DevOps quickly became my passion. I quickly realized the value
+        I did not know much about devops and it was apparent on the interview, but I did have some experience developing and deploying applications and I did well on the programming 
+        portion of the interview so they gave me an amazing opportunity to learn DevOps and work for an amazing company. In the following years I focused all of my energy on
+        learning the principles and platforms that DevOps revolves around. CI/CD, containerization, infrastructure as code, configuration as code, the cloud,
+        system administration, and the list goes on. I really loved application development, but DevOps quickly became my passion. I quickly realized the value
         that DevOps, Platform Engineering, and Site Reliability engineering bring to an organization. This was a world I was completely unfamiliar with before starting
         this job, as I've never worked in an organization big enough to benefit from allocating resources to this type of work. 
       </p>
 
-      <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
-        Not only was I gaining crucial knowledge about this industry, but I was working for a great company that was really doing amazing things for new york. 
-        Healthfirst is a not-for-profit New York health insurance company. What that means is that they are given funding by hospitals to provide affordable
-        healthcare to New York residents who need it. The demograpphic this covers are people who cannot afford insurance, but also may not qualify for insurance
-        that the govenment provides. This made it easy to give everything I had to contribute to this amazing company that helps so many people every day. Not to 
-        mention that the people I have worked with are amazing and brilliant as well, from my boss, to my team, to the teams that we collaborated with. 
-      </p>
+      {/* <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
+        Not only have I been gaining crucial knowledge about this industry, but I have been working for a great company that is really doing amazing things for New York. 
+        Healthfirst is a not-for-profit New York health insurance company. What that means is that we are given funding by hospitals to provide affordable
+        healthcare to New York residents who need it. The demographic this covers are people who cannot afford insurance, but also may not qualify for insurance
+        that the government provides. This makes it easy to give everything I have to contribute to this amazing company that helps so many people every day. Not to 
+        mention that the people I have work with are amazing and brilliant as well, from my boss, to my team, to the teams that we collaborate with. 
+      </p> */}
 
-      <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
-        In the next stage of my journey, I want to continue to grow, while working for a company that has a positive impact on the world. I believe I have a skillset that
-        is value to most companies and a mindset for learning new things and expanding my skillset. 
-        
-      </p>
     </div>
   );
 };
