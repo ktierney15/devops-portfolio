@@ -7,7 +7,8 @@ import Footer from './components/Footer';
 
 import Home from "./pages/Home"
 import Projects from "./pages/Projects"
-import Resume from "./pages/Resume"
+// import Resume from "./pages/Resume"
+import Knowledge from "./pages/Kowledge"
 import About from "./pages/About"
 
 
@@ -20,7 +21,7 @@ function App() {
           <Route path="/" element={<Header />}>
             <Route index element={<Home />} />
             <Route path="projects" element={<Projects />} />
-            <Route path="resume" element={<Resume />} />
+            <Route path="knowledge-base" element={<Knowledge />} />
             <Route path="about" element={<About />} />
           </Route>
         </Routes>
