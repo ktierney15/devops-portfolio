@@ -3,13 +3,15 @@ import projectsData from '../projects.json';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 
+
 const Projects = () => {
     return (
-      <div style={{ padding: '16px' }}>
+      <div style={{ padding: '16px', maxWidth: "70vw" }}>
         <Typography variant="h2">Projects</Typography>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {projectsData.projects.map((project, index) => (
             <li key={index} style={{ marginBottom: '16px' }}>
+              <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} /> {/* Horizontal line */}
               <Typography variant="h6" style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
                 {project.name}
               </Typography>
@@ -19,7 +21,7 @@ const Projects = () => {
                 style={{ maxWidth: '100%', marginBottom: '8px' }}
               />
               <Typography variant="body1" style={{ marginBottom: '8px' }}>
-                Description: {project.description}
+                {project.description}
               </Typography>
               <Typography variant="body1">
                 GitHub:{' '}

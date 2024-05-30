@@ -1,22 +1,16 @@
 {
     "projects": [
       {
-        "name": "My Resume",
-        "image": "https://example.com/project1-image.jpg",
+        "name": "My Website",
+        "image": "/my-site.png",
         "githubLink": "https://github.com/ktierney15/devops-portfolio",
-        "description": "Resume/Portfolio website"
+        "description": "My personal website"
       },
       {
-        "name": "Ms Resume",
-        "image": "https://example.com/project2-image.jpg",
-        "githubLink": "https://github.com/username/project2",
-        "description": "A brief description of Project 2."
-      },
-      {
-        "name": "Serverless Application",
-        "image": "https://example.com/project3-image.jpg",
-        "githubLink": "https://github.com/username/project3",
-        "description": "A brief description of Project 3."
+        "name": "Michelle Parente Health",
+        "image": "/Ms-site.png",
+        "githubLink": "https://github.com/ktierney15/M-website",
+        "description": "This is a website that I created and host in a kubernetes cluster for my girlfriend"
       }
     ]
   }
