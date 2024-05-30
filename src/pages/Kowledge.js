@@ -18,9 +18,11 @@ const Knowledge = () => {
                 <ListItem button component="a" href="#docker">
                     <ListItemText primary="Docker" />
                 </ListItem>
+                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <ListItem button component="a" href="#kubernetes">
                     <ListItemText primary="Kubernetes" />
                 </ListItem>
+                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <ListItem button component="a" href="#gitactions">
                     <ListItemText primary="Github Actions" />
                 </ListItem>
@@ -30,8 +32,11 @@ const Knowledge = () => {
             {/* Main Content Area */}
             <Grid item xs={9} sx={{ padding: 2 }}>
                 <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
+                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <Docker />
+                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <Kubernetes />
+                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <Actions />
             </Grid>
         </Grid>

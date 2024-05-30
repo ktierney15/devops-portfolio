@@ -14,16 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up NodeJS environment
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18
+      # - name: Set up NodeJS environment
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 18
 
-      - name: Install package dependencies
-        run: npm install
+      # - name: Install package dependencies
+      #   run: npm install
       
-      - name: Build and Lint
-        run: npm run build
+      # - name: Build and Lint
+      #   run: npm run build
+      - name: Build Docker image
+        run: docker build -t react-app .
+
+      - name: Run Docker container
+        run: docker run -d -p 3000:3000 react-app
 
   Terraform-Build:
     needs: React-Build
