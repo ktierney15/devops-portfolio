@@ -1,17 +1,17 @@
-FROM node:14-alpine AS production
-ENV NODE_ENV production
+FROM node:14-alpine as build
 
-# Add a work directory
 WORKDIR /app
-# Cache and Install dependencies
-COPY package.json .
-COPY package-lock.json .
+
+COPY package*.json ./
 RUN npm install
 
-# Copy app files
 COPY . .
-# Expose port
-EXPOSE 3000
-# Start the app
-CMD [ "npm", "start" ]
-# RUN npm run build
+RUN npm run build
+
+# production environment
+FROM nginx:alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
