@@ -7,13 +7,14 @@ import Docker from '../topics/Docker';
 import Kubernetes from '../topics/Kubernetes';
 import Actions from '../topics/Actions';
 
+
 const Knowledge = () => {
     return (
       <div>
         {/* <Typography variant="h2">Knowledge Base</Typography> */}
         <Grid container style={{ width: '100vw', height: '100vh' }}>
             {/* Sidebar */}
-            <Grid item xs={3} sx={{ padding: 2 }}>
+            <Grid className="hidden-on-small" item xs={3} sx={{ padding: 2, border: '1px solid white' }}>
                 <Typography variant="h5">Appendix</Typography>
                 <List component="nav">
                 <ListItem button component="a" href="#cicd">

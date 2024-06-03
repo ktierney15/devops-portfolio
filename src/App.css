@@ -20,6 +20,12 @@ body {
   padding-bottom: '56px';
 }
 
+@media (max-width: 768px) {
+  .hidden-on-small {
+    display: none; /* Hide the component on small screens */
+  }
+}
+
 /* Navigation styles */
 
 .nav-bar {
