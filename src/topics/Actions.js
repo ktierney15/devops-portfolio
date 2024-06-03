@@ -3,8 +3,8 @@ import { Typography } from '@mui/material';
 
 const Actions = () => (
     <section id="gitactions" style={{ paddingTop: '5%' }}>
-      <Typography variant="h6">Actions Section</Typography>
-      <p>This is the Actions section</p>
+      <Typography variant="h3">Github Actions</Typography>
+      <p>Github Actions is a CI/CD workflow automation platform that integrates easily with github projects</p>
     </section>
   );
 
