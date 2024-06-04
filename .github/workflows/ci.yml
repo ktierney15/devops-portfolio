@@ -9,6 +9,25 @@ on:
   
 
 jobs:
+  App-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up NodeJS environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Install package dependencies
+        run: npm install
+      
+      - name: Build and Lint
+        run: npm run build
+
   Docker-Build:
     runs-on: ubuntu-latest
     steps:
