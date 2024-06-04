@@ -9,7 +9,7 @@ on:
   
 
 jobs:
-  React-Build:
+  Docker-Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,33 +20,36 @@ jobs:
       - name: Run Docker container
         run: docker run -d -p 3000:80 react-app
 
-  Terraform-Build:
-    needs: React-Build
-    runs-on: ubuntu-latest
-    env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: ${{ github.sha }}
+  # Terraform-Build:
+  #   needs: React-Build
+  #   runs-on: ubuntu-latest
+  #   env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0
+  #         ref: ${{ github.sha }}
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 0.14.0
+  #     - name: Set up Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         terraform_version: 0.14.0
 
-      - name: Terraform Init and Plan
-        run: |
-          cd IAC
-          terraform init
-          terraform plan
+  #     - name: Terraform Init and Plan
+  #       run: |
+  #         cd IAC
+  #         terraform init
+  #         terraform plan
 
   Version-and-Publish:
-    needs: Terraform-Build
+    needs: Docker-Build
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     if: github.event_name != 'pull_request'
     steps:
       - name: Checkout Repository
@@ -89,27 +92,39 @@ jobs:
           git tag ${{ env.updated_tag }}
           git push origin --tags
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: authenticate to AWS 
+        run: echo aws authenticate
 
-      - name: Build and push
-        if: ${{ env.version_increment_type == 'major' }}
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:${{ env.updated_tag }}
+      - name: push image to ECR
+        run: push image ${{ env.updated_tag }}
 
-      - name: Build and push LATEST
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:latest
+
+
+
+
+
+###################################################################################
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # - name: Build and push
+      #   if: ${{ env.version_increment_type == 'major' }}
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:${{ env.updated_tag }}
+
+      # - name: Build and push LATEST
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_USERNAME }}/devops_portfolio:latest
 
 
