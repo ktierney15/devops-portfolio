@@ -20,7 +20,9 @@ jobs:
           node-version: 18
 
       - name: Lint
-        run: npm run lint
+        run: |
+          npm install eslint
+          npm run lint
 
       - name: Install package dependencies
         run: npm install
