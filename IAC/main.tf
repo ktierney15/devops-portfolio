@@ -4,19 +4,22 @@ provider "aws" {
   secret_key = var.aws_secret_key
 }
 
-resource "aws_instance" "test" {
-  ami           = "ami-0c55b159cbfafe1f0"  # Amazon Linux 2 AMI (HVM), SSD Volume Type
-  instance_type = "t2.micro"
+# Amazon Linux 2 AMI (HVM), SSD Volume Type
+data "aws_ami" "amazon-linux-2" {
+ most_recent = true
+
+ filter {
+   name   = "owner-alias"
+   values = ["amazon"]
+ }
+
+ filter {
+   name   = "name"
+   values = ["amzn2-ami-hvm*"]
+ }
 }
 
-locals {
-  playbook_vars = {
-    docker_user = var.docker_user
-    docker_pass = var.docker_pass
-  }
-}
-
-
+# User Data to run ansible playbook
 data "cloudinit_config" "server_config" {
   gzip          = true
   base64_encode = true
@@ -34,28 +37,86 @@ data "cloudinit_config" "server_config" {
 }
 
 
-# provider "aws" {
-#   region = "us-east-1"
+resource "aws_security_group" "server_group" {
+  name        = "server_group"
+  description = "Allow HTTP traffic"
+
+  // Define inbound rule to allow HTTP traffic from any source
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // Define outbound rule to allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+# IAM role for session manager
+resource "aws_iam_role" "ssm_role" {
+  name               = "ssm_role"
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Service": "ec2.amazonaws.com"
+        },
+        "Action": "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_policy_attachment" {
+  role       = aws_iam_role.ssm_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+resource "aws_iam_instance_profile" "ssm_instance_profile" {
+  name = "ssm_instance_profile"
+  role = aws_iam_role.ssm_role.name
+}
+
+resource "aws_instance" "host" {
+  ami                  = "${data.aws_ami.amazon-linux-2.id}"
+  instance_type        = "t2.micro"
+  iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
+  user_data            = data.cloudinit_config.server_config.rendered
+  key_name             = "default-ec2"
+
+  vpc_security_group_ids = [aws_security_group.server_group.id] 
+  tags = {
+    Name = "devops_portfolio"
+  }
+}
+
+# # Allocate Elastic IP
+# resource "aws_eip" "eip" {
+#   instance = aws_instance.host.id
 # }
 
-# resource "aws_instance" "example" {
-#   ami           = "ami-xxxxxxxxxxxxxxxxx"
-#   instance_type = "t2.micro"
-#   key_name      = "your-key-pair-name"
-#   subnet_id     = "subnet-xxxxxxxxxxxxxxxxx" # Specify your subnet ID
-
-#   security_group_names = ["your-security-group-name"]
-
-#   user_data = <<-EOF
-#               #!/bin/bash
-#               # Your user data script here
-#               EOF
-
-#   tags = {
-#     Name = "example-instance"
-#   }
+# # Create DNS record in Route 53
+# resource "aws_route53_record" "eip" {
+#   zone_id = var.route53_zone_id # figure out what this is
+#   name    = "kevintierney.com"
+#   type    = "A"
+#   ttl     = "300"
+#   records = [aws_eip.eip.public_ip]
 # }
 
-# output "instance_public_ip" {
-#   value = aws_instance.example.public_ip
-# }
+locals {
+  playbook_vars = {
+    docker_user = var.docker_user
+    docker_pass = var.docker_pass
+  }
+}

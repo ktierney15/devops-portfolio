@@ -28,7 +28,7 @@ const Header= () =>{
             },
           }}>
           <Tab component={Link} to="/projects" label="Projects" sx={{ color: 'white', textDecoration: 'none' }} />
-          <Tab component={Link} to="/resume" label="Resume" sx={{ color: 'white', textDecoration: 'none' }} />
+          <Tab component={Link} to="/knowledge-base" label="Knowledge Base" sx={{ color: 'white', textDecoration: 'none' }} />
           <Tab component={Link} to="/about" label="About Me" sx={{ color: 'white', textDecoration: 'none' }} />
           </Tabs>
         </Toolbar>
