@@ -1,0 +1,152 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  Subnet1ID:
+    Type: String
+  Subnet2ID:
+    Type: String
+  VPCID:
+    Type: String
+  DomainName:
+    Type: String
+  Image:
+    Type: String
+  Name:
+    Type: String
+Resources:
+  ACMCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties: 
+      DomainName: !Ref DomainName
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          ValidationDomain: !Ref DomainName
+      ValidationMethod: DNS
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "aws-ecs-${Name}"
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "aws-ecs-${Name}-group"
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "aws-ecs-${Name}-role"
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      Policies:
+        - PolicyDocument:
+            Statement:
+              Action:
+                - ses:SendEmail
+              Effect: Allow
+              Resource: '*'
+          PolicyName: send-mail
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: ContainerSecurityGroup
+      GroupDescription: Security group for container
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !sub "aws-ecs-${Name}-task"
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !Ref ExecutionRole
+      TaskRoleArn: !Ref TaskRole
+      ContainerDefinitions:
+        - Name: !Ref Name
+          Image: !Ref Image
+          PortMappings:
+            - ContainerPort: 80
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: ecs
+      RequiresCompatibilities:
+        - FARGATE
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      ServiceName: !Sub "aws-ecs-${Name}-svc"
+      Cluster: !Ref Cluster
+      TaskDefinition: !Ref TaskDefinition
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          Subnets:
+            - !Ref Subnet1ID
+            - !Ref Subnet2ID
+          SecurityGroups:
+            - !GetAtt ContainerSecurityGroup.GroupId
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: LoadBalancerSecurityGroup
+      GroupDescription: Security group for load balancer
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub "aws-ecs-${Name}-alb"
+      Subnets:
+        - !Ref Subnet1ID
+        - !Ref Subnet2ID
+      SecurityGroups:
+        - !GetAtt LoadBalancerSecurityGroup.GroupId
+
+# prerequisites
+# create a domain in route53
+# have a vpc
+# have 2 subnets in different azs in that vpc (all same region us-east-1)
+
+# validate certificate while its uploading
+# https://github.com/aaronwht/aws-ecs-typescript/blob/main/ecs-2.yml
+# https://www.youtube.com/watch?v=eaS1jza_hy0&list=TLPQMDYwNjIwMjRBSdRl7WRAiQ&index=6
+
+
+# aws cloudformation create-stack --stack-name STACK_NAME --template-body file:template1.yaml --capabilities CAPABILITY_NAMED_IAM \
+# --parameters ParameterKey=VPCID,ParameterValue=YOUR_VPC_ID \
+# ParameterKey=Subnet1ID,ParameterValue=YOUR_SUBNET_1_ID \
+# ParameterKey=Subnet2ID,ParameterValue=YOUR_SUBNET_2_ID \
+# ParameterKey=DomainName,ParameterValue=YOUR_DOMAIN_NAME.com \
+# ParameterKey=Image,ParameterValue=YOUR_IMAGE \
+# ParameterKey=Name,ParameterValue=YOUR_RESOURCE_NAME 
+
+
+# try updating the image directly and seeing if it updates if not add the bottom section of the workflow
