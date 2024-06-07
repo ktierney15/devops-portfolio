@@ -1,10 +1,15 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+
+const markdown = `
+# Github Actions
+
+actions section
+`;
 
 const Actions = () => (
-    <section id="gitactions" style={{ paddingTop: '5%' }}>
-      <Typography variant="h3">Github Actions</Typography>
-      <p>Github Actions is a CI/CD workflow automation platform that integrates easily with github projects</p>
+    <section id="gitactions" style= {{ scrollMarginTop: '70px' }}>
+      <ReactMarkdown>{markdown}</ReactMarkdown>
     </section>
   );
 

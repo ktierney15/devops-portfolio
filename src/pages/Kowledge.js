@@ -37,7 +37,7 @@ const Knowledge = () => {
             </Grid>
 
             {/* Main Content Area */}
-            <Grid item xs={9} sx={{ padding: 2 }}>
+            <Grid item style={{ textAlign: 'left' }} xs={9} sx={{ padding: 2 }}>
                 <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
                 <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <CICD />
