@@ -15,7 +15,7 @@ import About from "./pages/About"
 function App() {
   return (
     <div className="App">
-      <header className="App-header" >
+      <header className="App-header" style={{ paddingBottom: '5%' }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Header />}>
