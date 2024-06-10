@@ -10,26 +10,16 @@ const AboutMe = () => {
         src={headshot}
         alt="Kevin Tierney"
         // style={{ borderRadius: '50%', maxWidth: '100%', marginBottom: '20px' }}
-        style={{ borderRadius: '50%', width: '50%', maxWidth: '100%', marginBottom: '20px' }}
+        style={{ borderRadius: '10%', width: '50%', maxWidth: '100%', marginBottom: '20px' }}
       />
-      <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}> My name is Kevin Tierney, and I am a Software Engineer who specializes in DevOps. I studied Computer Science at Elon University, where I discovered my
-        passion for Software Engineering. I originally was intending to study business, but I tried a computer science course in the spring of my freshman year and 
-        never turned back. After building foundational skills, I took on an internship during the spring of my junior year contributing to the React frontend of a 
-        startup companies customer portal. I really enjoyed my brief time working in frontend applications and at the time that is what I wanted to pursue. In preparation
-        for this I started creating websites, mostly that would go nowhere but were great practice. The capstone of this series of projects was a blog website for 
-        my girlfriend, who at the time was applying for jobs in the journalism industry. This website was both a place where readers can check out her articles, as well
-        as a content management system for her to upload articles. These projects likely contributed to getting an interview for my next internship that summer, which was
-        for the company I work for today. Little did I know this interview was not for a frontend position, but a DevOps position. 
+      <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}> 
+      My name is Kevin Tierney, and I am a Software Engineer with a focus on DevOps. I graduated with a degree in Computer Science from Elon University, where I discovered my passion for Software Engineering. Initially, I intended to study business, but a spring semester computer science course during my freshman year changed my path.
+      After building foundational skills, I interned at a startup in the spring of my junior year, contributing to the React frontend of their customer portal. This experience deepened my interest in frontend development, leading me to create several other websites. One significant project was a blog for my girlfriend, who was then applying for journalism jobs. This site featured a content management system and showcased her articles. 
       </p>
       
       <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}>
-        I did not know much about devops and it was apparent, but I did have some experience developing and deploying applications and had a strong programming foundation. 
-        This gave me an amazing opportunity to learn DevOps and work for Healthfirst, an amazing company that provides health insurance to low-income New Yorkers. 
-        The past few years I have been focusing all of my energy on learning the principles and platforms that DevOps revolves around. CI/CD, containerization, 
-        infrastructure as code, configuration as code, the cloud, system administration, and the list goes on. 
-        I really love application development, but DevOps quickly became my passion. I quickly realized the value
-        that DevOps, Platform Engineering, and Site Reliability engineering bring to an organization. This was a world I was completely unfamiliar with before starting
-        my job, and now I am super enthusiastic to contribute and learn more about DevOps. 
+      These projects likely helped me secure an interview for my next internship, which turned out to be for a DevOps role at Healthfirst—a company providing health insurance to low-income New Yorkers. Although my experience in DevOps was limited, my background in developing and deploying applications, coupled with a strong programming foundation, gave me a foothold in this new field.
+      Since then, I have immersed myself in learning and mastering key DevOps principles and platforms, including CI/CD, containerization, infrastructure as code, configuration as code, the cloud, and system administration. My initial interest in application development evolved into a passion for DevOps, Platform Engineering, and Site Reliability Engineering. I am now deeply enthusiastic about contributing to and advancing in the field of DevOps. 
       </p>
     </div>
   );

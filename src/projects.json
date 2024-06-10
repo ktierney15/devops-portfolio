@@ -4,13 +4,13 @@
         "name": "My Website",
         "image": "/my-site.png",
         "githubLink": "https://github.com/ktierney15/devops-portfolio",
-        "description": "My personal website"
+        "description": "My website showcasing my DevOps projects and experience (the website that you are on right now)"
       },
       {
         "name": "Michelle Parente Health",
         "image": "/Ms-site.png",
         "githubLink": "https://github.com/ktierney15/M-website",
-        "description": "This is a website that I created and host in a kubernetes cluster for my girlfriend"
+        "description": "Dockerized react application I created for my girlfriends training/nutrition business"
       }
     ]
   }

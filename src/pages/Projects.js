@@ -1,7 +1,7 @@
 import React from 'react';
 import projectsData from '../projects.json';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import { Typography, Button } from '@mui/material';
+// import Link from '@mui/material/Link';
 
 
 const Projects = () => {
@@ -23,12 +23,22 @@ const Projects = () => {
               <Typography variant="body1" style={{ marginBottom: '8px' }}>
                 {project.description}
               </Typography>
-              <Typography variant="body1">
+              {/* <Typography variant="body1">
                 GitHub:{' '}
                 <Link href={project.githubLink} target="_blank" rel="noopener noreferrer" style={{ color: '#1976D2' }}>
                   {project.githubLink}
                 </Link>
-              </Typography>
+              </Typography> */}
+              <Button
+              variant="contained"
+              size="large"
+              href={project.githubLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ backgroundColor: '#FFA500', color: '#ffffff', marginLeft: '10px' }}
+              >
+              Github
+              </Button>
             </li>
           ))}
         </ul>
