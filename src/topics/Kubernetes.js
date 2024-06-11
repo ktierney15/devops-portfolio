@@ -1,10 +1,15 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+
+const markdown = `
+# Kubernetes
+
+k8s section
+`;
 
 const Kubernetes = () => (
-    <section id="kubernetes" style={{ paddingTop: '5%' }}>
-      <Typography variant="h6">Kubernetes Section</Typography>
-      <p>This is the Kubernetes section</p>
+    <section id="kubernetes" style= {{ scrollMarginTop: '70px' }}>
+      <ReactMarkdown>{markdown}</ReactMarkdown>
     </section>
   );
 
