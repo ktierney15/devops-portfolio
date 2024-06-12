@@ -13,14 +13,26 @@ Parameters:
   Name:
     Type: String
 Resources:
+  # ACMCertificate:
+  #   Type: AWS::CertificateManager::Certificate
+  #   Properties: 
+  #     DomainName: !Sub "api.${DomainName}"
+  #     DomainValidationOptions:
+  #       - DomainName: !Sub "api.${DomainName}"
+  #         ValidationDomain: !Sub "api.${DomainName}"
+  #     ValidationMethod: DNS
   ACMCertificate:
-    Type: AWS::CertificateManager::Certificate
+    Type: "AWS::CertificateManager::Certificate"
     Properties: 
-      DomainName: !Ref DomainName
+      DomainName: !Sub "*.${DomainName}"
+      SubjectAlternativeNames:
+        - !Ref DomainName  # Root domain
+      ValidationMethod: "DNS"
       DomainValidationOptions:
+        - DomainName: !Sub "*.${DomainName}"
+          ValidationDomain: !Ref DomainName
         - DomainName: !Ref DomainName
           ValidationDomain: !Ref DomainName
-      ValidationMethod: DNS
   AutoScalingRole:
     Type: AWS::IAM::Role
     Properties:
@@ -37,14 +49,14 @@ Resources:
     Properties:
       MinCapacity: 1
       MaxCapacity: 2
-      ResourceId: !Sub "service/aws-ecs-${Name}/aws-ecs-${Name}-svc"
+      ResourceId: !Sub service/aws-ecs-${Name}/aws-ecs-${Name}-svc
       ScalableDimension: ecs:service:DesiredCount
       ServiceNamespace: ecs
       RoleARN: !GetAtt AutoScalingRole.Arn
   ApiScalingPolicyCPU:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
-      PolicyName: !Sub "aws-ecs-${Name}-api-svc-cpu"
+      PolicyName: !Sub aws-ecs-${Name}-svc-cpu
       PolicyType: TargetTrackingScaling
       ScalingTargetId: !Ref AutoScalingTarget
       TargetTrackingScalingPolicyConfiguration:
@@ -56,7 +68,7 @@ Resources:
   ApiScalingPolicyMemory:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
-      PolicyName: !Sub "aws-ecs-${Name}-api-svc-memory"
+      PolicyName: !Sub aws-ecs-${Name}-svc-memory
       PolicyType: TargetTrackingScaling
       ScalingTargetId: !Ref AutoScalingTarget
       TargetTrackingScalingPolicyConfiguration:
@@ -68,15 +80,15 @@ Resources:
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: !Sub "aws-ecs-${Name}-api"
+      ClusterName: !Sub aws-ecs-${Name}
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "aws-ecs-${Name}-group"
+      LogGroupName: !Sub aws-ecs-${Name}-group
   ExecutionRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub "aws-ecs-${Name}-role"
+      RoleName: !Sub aws-ecs-${Name}-role
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -116,17 +128,21 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub "aws-ecs-${Name}-task"
+      Family: !Sub aws-ecs-${Name}-task
       Cpu: 256
       Memory: 512
       NetworkMode: awsvpc
       ExecutionRoleArn: !Ref ExecutionRole
       TaskRoleArn: !Ref TaskRole
       ContainerDefinitions:
-        - Name: !Sub "aws-ecs-${Name}-container"
+        - Name: !Ref Name
           Image: !Ref Image
           PortMappings:
             - ContainerPort: 8080
@@ -142,7 +158,7 @@ Resources:
     Type: AWS::ECS::Service
     Properties:
       # rename after first deploy
-      ServiceName: !Sub "aws-ecs-${Name}-service"
+      ServiceName: !Sub "aws-ecs-${Name}-svc"
       Cluster: !Ref Cluster
       TaskDefinition: !Ref TaskDefinition
       DesiredCount: 1
@@ -158,7 +174,7 @@ Resources:
       LoadBalancers:
         - TargetGroupArn: !Ref TargetGroup
           ContainerPort: 8080
-          ContainerName: !Sub "aws-ecs-${Name}-container"
+          ContainerName: !Ref Name
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -173,10 +189,14 @@ Resources:
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: !Sub "aws-ecs-${Name}-alb"
+      Name: !Sub aws-ecs-${Name}-alb
       Subnets:
         - !Ref Subnet1ID
         - !Ref Subnet2ID
@@ -218,23 +238,44 @@ Resources:
     DependsOn: LoadBalancer
     Properties:
       TargetType: ip
-      Name: !Sub "aws-ecs-${Name}-tg"
+      Name: !Sub aws-ecs-${Name}-tg
       Port: 8080
       Protocol: HTTP
       VpcId: !Ref VPCID
-  
+    
+  # ApiDomain:
+  #   Type: AWS::Route53::RecordSet
+  #   DependsOn: LoadBalancer
+  #   Properties:
+  #     HostedZoneName: !Sub "${DomainName}."
+  #     Name: !Sub "api.${DomainName}"
+  #     Type: CNAME
+  #     TTL: 60
+  #     ResourceRecords:
+  #       - !GetAtt LoadBalancer.DNSName
+
   ApiDomain:
-    Type: AWS::Route53::RecordSet
-    DependsOn: LoadBalancer
+    Type: "AWS::Route53::RecordSet"
     Properties:
       HostedZoneName: !Sub "${DomainName}."
-      Name: !Sub "api.${DomainName}"
-      Type: CNAME
-      TTL: 60
-      ResourceRecords:
-        - !GetAtt LoadBalancer.DNSName
+      Name: !Sub "${DomainName}."
+      Type: "A"
+      AliasTarget:
+        HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
+        DNSName: !GetAtt LoadBalancer.DNSName
 
-# aws cloudformation update-stack --stack-name STACK_NAME --template-body file:template2.yml --capabilities CAPABILITY_NAMED_IAM \
+  # ApiDomain:
+  #   Type: AWS::Route53::RecordSet
+  #   DependsOn: LoadBalancer
+  #   Properties:
+  #     HostedZoneName: !Ref DomainName
+  #     Name: !Ref DomainName
+  #     Type: A
+  #     AliasTarget:
+  #       HostedZoneId: !Sub "${DomainName}."
+  #       DNSName: !GetAtt LoadBalancer.DNSName
+
+# aws cloudformation update-stack --stack-name STACK_NAME --template-body file://template2.yml --capabilities CAPABILITY_NAMED_IAM \
 # --parameters ParameterKey=VPCID,ParameterValue=YOUR_VPC_ID \
 # ParameterKey=Subnet1ID,ParameterValue=YOUR_SUBNET_1_ID \
 # ParameterKey=Subnet2ID,ParameterValue=YOUR_SUBNET_2_ID \
