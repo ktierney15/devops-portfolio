@@ -25,4 +25,5 @@ yarn-error.log*
 
 # cloud formation templates
 template1.yaml
+
 template2.yaml
