@@ -18,7 +18,7 @@ Resources:
     Properties: 
       DomainName: !Sub "*.${DomainName}"
       SubjectAlternativeNames:
-        - !Ref DomainName  # Root domain
+        - !Ref DomainName
       ValidationMethod: "DNS"
       DomainValidationOptions:
         - DomainName: !Sub "*.${DomainName}"
@@ -239,17 +239,6 @@ Resources:
       Port: 8080
       Protocol: HTTP
       VpcId: !Ref VPCID
-    
-  # ApiDomain:
-  #   Type: AWS::Route53::RecordSet
-  #   DependsOn: LoadBalancer
-  #   Properties:
-  #     HostedZoneName: !Sub "${DomainName}."
-  #     Name: !Sub "api.${DomainName}"
-  #     Type: CNAME
-  #     TTL: 60
-  #     ResourceRecords:
-  #       - !GetAtt LoadBalancer.DNSName
 
   ApiDomain:
     Type: "AWS::Route53::RecordSet"
@@ -260,17 +249,6 @@ Resources:
       AliasTarget:
         HostedZoneId: !GetAtt LoadBalancer.CanonicalHostedZoneID
         DNSName: !GetAtt LoadBalancer.DNSName
-
-  # ApiDomain:
-  #   Type: AWS::Route53::RecordSet
-  #   DependsOn: LoadBalancer
-  #   Properties:
-  #     HostedZoneName: !Ref DomainName
-  #     Name: !Ref DomainName
-  #     Type: A
-  #     AliasTarget:
-  #       HostedZoneId: !Sub "${DomainName}."
-  #       DNSName: !GetAtt LoadBalancer.DNSName
 
 # aws cloudformation update-stack --stack-name STACK_NAME --template-body file://template2.yml --capabilities CAPABILITY_NAMED_IAM \
 # --parameters ParameterKey=VPCID,ParameterValue=YOUR_VPC_ID \
