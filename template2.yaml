@@ -13,14 +13,6 @@ Parameters:
   Name:
     Type: String
 Resources:
-  # ACMCertificate:
-  #   Type: AWS::CertificateManager::Certificate
-  #   Properties: 
-  #     DomainName: !Sub "api.${DomainName}"
-  #     DomainValidationOptions:
-  #       - DomainName: !Sub "api.${DomainName}"
-  #         ValidationDomain: !Sub "api.${DomainName}"
-  #     ValidationMethod: DNS
   ACMCertificate:
     Type: "AWS::CertificateManager::Certificate"
     Properties: 
@@ -145,19 +137,24 @@ Resources:
         - Name: !Ref Name
           Image: !Ref Image
           PortMappings:
-            - ContainerPort: 8080
+            - ContainerPort: 80
           LogConfiguration:
             LogDriver: awslogs
             Options:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: ecs
+          HealthCheck:
+            Command: ["CMD-SHELL", "curl --fail http://localhost:80 || exit 1"]
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+            StartPeriod: 0
       RequiresCompatibilities:
         - FARGATE
   Service:
     Type: AWS::ECS::Service
     Properties:
-      # rename after first deploy
       ServiceName: !Sub "aws-ecs-${Name}-svc"
       Cluster: !Ref Cluster
       TaskDefinition: !Ref TaskDefinition
@@ -173,7 +170,7 @@ Resources:
             - !GetAtt ContainerSecurityGroup.GroupId
       LoadBalancers:
         - TargetGroupArn: !Ref TargetGroup
-          ContainerPort: 8080
+          ContainerPort: 80
           ContainerName: !Ref Name
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
