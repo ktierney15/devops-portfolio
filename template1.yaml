@@ -13,20 +13,12 @@ Parameters:
   Name:
     Type: String
 Resources:
-  # ACMCertificate:
-  #   Type: AWS::CertificateManager::Certificate
-  #   Properties: 
-  #     DomainName: !Sub "api.${DomainName}"
-  #     DomainValidationOptions:
-  #       - DomainName: !Sub "api.${DomainName}"
-  #         ValidationDomain: !Sub "api.${DomainName}"
-  #     ValidationMethod: DNS
   ACMCertificate:
     Type: "AWS::CertificateManager::Certificate"
     Properties: 
       DomainName: !Sub "*.${DomainName}"
       SubjectAlternativeNames:
-        - !Ref DomainName  # Root domain
+        - !Ref DomainName 
       ValidationMethod: "DNS"
       DomainValidationOptions:
         - DomainName: !Sub "*.${DomainName}"
@@ -100,6 +92,12 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: ecs
+          HealthCheck:
+            Command: ["CMD-SHELL", "curl --fail http://localhost:80 || exit 1"]
+            Interval: 30
+            Timeout: 5
+            Retries: 3
+            StartPeriod: 0
       RequiresCompatibilities:
         - FARGATE
   Service:
