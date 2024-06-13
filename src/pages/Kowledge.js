@@ -11,7 +11,6 @@ import Actions from '../topics/Actions';
 const Knowledge = () => {
     return (
       <div style={{ paddingBottom: '5%' }}>
-        {/* <Typography variant="h2">Knowledge Base</Typography> */}
         <Grid container style={{ width: '100vw', height: '100vh' }}>
             {/* Sidebar */}
             <Grid className="hidden-on-small" item xs={3} sx={{ padding: 1, border: '1px solid white' }}>

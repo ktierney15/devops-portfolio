@@ -4,12 +4,9 @@ import headshot from '../assets/headshot.jpg';
 const AboutMe = () => {
   return (
     <div style={{ textAlign: 'center', maxWidth: '600px', margin: 'auto', padding: '20px' }}>
-      {/* Picture of myself right here */}
-      {/* Assuming you have an image file, replace 'your_image.jpg' with the actual file path */}
       <img
         src={headshot}
         alt="Kevin Tierney"
-        // style={{ borderRadius: '50%', maxWidth: '100%', marginBottom: '20px' }}
         style={{ borderRadius: '10%', width: '50%', maxWidth: '100%', marginBottom: '20px' }}
       />
       <p style={{ fontSize: '1.2rem', lineHeight: '1.5' }}> 
