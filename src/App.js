@@ -7,9 +7,9 @@ import Footer from './components/Footer';
 
 import Home from "./pages/Home"
 import Projects from "./pages/Projects"
-// import Resume from "./pages/Resume"
 import Knowledge from "./pages/Kowledge"
 import About from "./pages/About"
+
 
 
 function App() {
@@ -23,6 +23,8 @@ function App() {
             <Route path="projects" element={<Projects />} />
             <Route path="knowledge-base" element={<Knowledge />} />
             <Route path="about" element={<About />} />
+            {/* Catch all route */}
+            <Route path="*" element={<Home />} />
           </Route>
         </Routes>
       </BrowserRouter>
