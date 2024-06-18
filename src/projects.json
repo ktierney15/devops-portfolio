@@ -11,6 +11,12 @@
         "image": "/Ms-site.png",
         "githubLink": "https://github.com/ktierney15/M-website",
         "description": "Dockerized react application I created for my girlfriends training/nutrition business"
+      },
+      {
+        "name": "Pipeline Templates Repository",
+        "image": "/pipelines.jpeg",
+        "githubLink": "https://github.com/ktierney15/pipeline-templates",
+        "description": "Centralized repository for all of my pipeline templates. Includes documentation and onboarding steps"
       }
     ]
   }
