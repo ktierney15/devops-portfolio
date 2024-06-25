@@ -6,6 +6,7 @@ import CICD from "../topics/CICD"
 import Docker from '../topics/Docker';
 import Kubernetes from '../topics/Kubernetes';
 import Actions from '../topics/Actions';
+import Terraform from '../topics/Terraform';
 
 
 const Knowledge = () => {
@@ -31,6 +32,10 @@ const Knowledge = () => {
                 <ListItem button component="a" href="#gitactions">
                     <ListItemText primary="Github Actions" />
                 </ListItem>
+                <hr style={{ margin: '10px 0', borderTop: '1px solid #ddd' }} />
+                <ListItem button component="a" href="#terraform">
+                    <ListItemText primary="Terraform" />
+                </ListItem>
                 </List>
             </Grid>
 
@@ -45,6 +50,8 @@ const Knowledge = () => {
                 <Kubernetes />
                 <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
                 <Actions />
+                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
+                <Terraform />
             </Grid>
         </Grid>
 
