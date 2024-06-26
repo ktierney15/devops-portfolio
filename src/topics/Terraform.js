@@ -188,11 +188,30 @@ module "ec2_instance" {
 \`\`\`
 
 #### Workspaces, Environments and Terraform Cloud
+In your SDLC you may have different environments to deploy to. 
+You might also have to manage many different application stacks, especially if you have a large organization. 
+This is where Terraform cloud and workspaces come into play. 
+     
+You can technically separate your environments with different sets of terraform files in different directories, but it is likely easier for you to keep different environments with the same configuration in different workspaces. 
+Workspaces use the same terraform files but maintain a different state. 
+To create and maneuver through workspaces run the following commands:
 
+\`\`\`
+# create two workspaces
+terraform workspace new dev
+terraform workspace new prod
 
+# switch between workspaces
+terraform workspace select dev
 
-#### Best Practices
+# apply the configuration in the selected workspace
+terraform apply
+\`\`\`
 
+In this example, we are creating a development and production workspaces (environments) that we can maintain independent states for. 
+    
+If you have a large team or company, you may want to consider terraform cloud. 
+They manage projects and workspaces and teams associated with them.
 
 `;
 
