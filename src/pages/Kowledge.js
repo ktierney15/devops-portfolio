@@ -1,55 +1,70 @@
 import React from 'react';
-import { Grid, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Grid, List, ListItem, ListItemText, Typography, Divider } from '@mui/material';
 
 // Topics
-import CICD from "../topics/CICD"
+import CICD from "../topics/CICD";
 import Docker from '../topics/Docker';
 import Kubernetes from '../topics/Kubernetes';
 import Actions from '../topics/Actions';
-
+import Terraform from '../topics/Terraform';
 
 const Knowledge = () => {
     return (
-      <div style={{ paddingBottom: '5%' }}>
-        <Grid container style={{ width: '100vw', height: '100vh' }}>
-            {/* Sidebar */}
-            <Grid className="hidden-on-small" item xs={3} sx={{ padding: 1, border: '1px solid white' }}>
-                <Typography variant="h5">Appendix</Typography>
-                <List component="nav">
-                <ListItem button component="a" href="#cicd">
-                    <ListItemText primary="CI/CD" />
-                </ListItem>
-                <hr style={{ margin: '10px 0', borderTop: '1px solid #ddd' }} />
-                <ListItem button component="a" href="#docker">
-                    <ListItemText primary="Docker" />
-                </ListItem>
-                <hr style={{ margin: '10px 0', borderTop: '1px solid #ddd' }} />
-                <ListItem button component="a" href="#kubernetes">
-                    <ListItemText primary="Kubernetes" />
-                </ListItem>
-                <hr style={{ margin: '10px 0', borderTop: '1px solid #ddd' }} />
-                <ListItem button component="a" href="#gitactions">
-                    <ListItemText primary="Github Actions" />
-                </ListItem>
-                </List>
-            </Grid>
+        <div style={{ padding: '2%' }}>
+            <Grid container style={{ width: '100vw', height: '100vh' }}>
+                {/* Sidebar */}
+                <Grid item xs={12} md={3} sx={{ padding: 2, borderRight: '1px solid #ddd' }}>
+                    <Typography variant="h5" gutterBottom>Appendix</Typography>
+                    <List component="nav">
+                        {[
+                            { id: "#cicd", label: "CI/CD" },
+                            { id: "#docker", label: "Docker" },
+                            { id: "#kubernetes", label: "Kubernetes" },
+                            { id: "#gitactions", label: "GitHub Actions" },
+                            { id: "#terraform", label: "Terraform" }
+                        ].map((item) => (
+                            <React.Fragment key={item.id}>
+                                <ListItem button component="a" href={item.id}>
+                                    <ListItemText primary={item.label} />
+                                </ListItem>
+                                <Divider sx={{ my: 1 }} />
+                            </React.Fragment>
+                        ))}
+                    </List>
+                </Grid>
 
-            {/* Main Content Area */}
-            <Grid item style={{ textAlign: 'left' }} xs={9} sx={{ padding: 2 }}>
-                <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
-                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
-                <CICD />
-                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
-                <Docker />
-                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
-                <Kubernetes />
-                <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} />
-                <Actions />
+                {/* Main Content Area */}
+                <Grid item xs={12} md={9} sx={{ padding: 3 }}>
+                    <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
+                    <Divider sx={{ my: 2 }} />
+                    
+                    <div id="cicd" style={{ textAlign: 'left' }}>
+                        <CICD />
+                    </div>
+                    <Divider sx={{ my: 2 }} />
+                    
+                    <div id="docker" style={{ textAlign: 'left' }}>
+                        <Docker />
+                    </div>
+                    <Divider sx={{ my: 2 }} />
+                    
+                    <div id="kubernetes" style={{ textAlign: 'left' }}>
+                        <Kubernetes />
+                    </div>
+                    <Divider sx={{ my: 2 }} />
+                    
+                    <div id="gitactions" style={{ textAlign: 'left' }}>
+                        <Actions />
+                    </div>
+                    <Divider sx={{ my: 2 }} />
+                    
+                    <div id="terraform" style={{ textAlign: 'left' }}>
+                        <Terraform />
+                    </div>
+                </Grid>
             </Grid>
-        </Grid>
-
-      </div>
+        </div>
     );
-  };
-  
+};
+
 export default Knowledge;

@@ -6,7 +6,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const Footer = () => {
     return (
-      <AppBar position="fixed" color="primary" style={{ top: 'auto', bottom: 0, backgroundColor: '#757575' }}>
+      <AppBar position="fixed" color="primary" style={{top: 'auto', bottom: 0, backgroundColor: '#757575' }}>
         <Container>
           <Toolbar>
             <Typography variant="body2" color="inherit" style={{ marginRight: 'auto' }}>
