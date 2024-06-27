@@ -36,7 +36,7 @@ const Header = () => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={{ backgroundColor: isScrolled ? '#FFA500' : 'transparent', borderBottom: 'none', boxShadow: 'none', transition: 'background-color 0.3s ease' }}>
         <Toolbar>
-          <Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: isScrolled ? 'white' : 'inherit', flexGrow: 1, textAlign: 'left', fontFamily: 'Verdana' }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', color: isScrolled ? 'white' : 'inherit', flexGrow: 1, textAlign: 'left', fontFamily: 'Verdana' }}>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Kevin Tierney</Link>
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
