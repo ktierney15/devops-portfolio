@@ -1,6 +1,6 @@
 import React from 'react';
 import projectsData from '../projects.json';
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, Divider } from '@mui/material';
 
 const Projects = () => {
     return (
@@ -9,7 +9,7 @@ const Projects = () => {
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {projectsData.projects.map((project, index) => (
             <li key={index} style={{ marginBottom: '16px' }}>
-              <hr style={{ margin: '20px 0', borderTop: '1px solid #ddd' }} /> {/* Horizontal line */}
+              <Divider sx={{ my: 1, borderColor: 'orange' }} />
               <Typography variant="h6" style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '8px' }}>
                 {project.name}
               </Typography>
