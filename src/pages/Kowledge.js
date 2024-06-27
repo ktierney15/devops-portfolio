@@ -27,7 +27,7 @@ const Knowledge = () => {
                                 <ListItem button component="a" href={item.id}>
                                     <ListItemText primary={item.label} />
                                 </ListItem>
-                                <Divider sx={{ my: 1 }} />
+                                <Divider sx={{ my: 1, borderColor: 'orange' }} />
                             </React.Fragment>
                         ))}
                     </List>
@@ -36,29 +36,29 @@ const Knowledge = () => {
                 {/* Main Content Area */}
                 <Grid item xs={12} md={9} sx={{ padding: 3 }}>
                     <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2, borderColor: 'orange' }} />
                     
-                    <div id="cicd" style={{ textAlign: 'left' }}>
+                    <div id="cicd" style={{ textAlign: 'left', scrollMarginTop: '80px' }}>
                         <CICD />
                     </div>
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2, borderColor: 'orange' }} />
                     
-                    <div id="docker" style={{ textAlign: 'left' }}>
+                    <div id="docker" style={{ textAlign: 'left', scrollMarginTop: '80px' }}>
                         <Docker />
                     </div>
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2, borderColor: 'orange' }} />
                     
-                    <div id="kubernetes" style={{ textAlign: 'left' }}>
+                    <div id="kubernetes" style={{ textAlign: 'left', scrollMarginTop: '80px' }}>
                         <Kubernetes />
                     </div>
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2, borderColor: 'orange' }} />
                     
-                    <div id="gitactions" style={{ textAlign: 'left' }}>
+                    <div id="gitactions" style={{ textAlign: 'left', scrollMarginTop: '80px' }}>
                         <Actions />
                     </div>
-                    <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2, borderColor: 'orange' }} />
                     
-                    <div id="terraform" style={{ textAlign: 'left' }}>
+                    <div id="terraform" style={{ textAlign: 'left', scrollMarginTop: '80px' }}>
                         <Terraform />
                     </div>
                 </Grid>
