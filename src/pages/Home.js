@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from 'react-router-dom';
-import { Grid, Card, CardContent, Typography, Button } from '@mui/material';
+import { Grid, Card, CardContent, Typography, Button, Divider } from '@mui/material';
 
 import logo from '../assets/home-logo.png';
 
@@ -22,7 +22,6 @@ const Home = () =>{
                     Learn More About Me
                 </Button>
 
-    
                 <Grid container spacing={3} style={{ padding: '5%' }}>
                     {/* Projects Card */}
                     <Grid item xs={12} sm={4}>

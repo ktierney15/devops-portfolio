@@ -11,6 +11,9 @@ import Terraform from '../topics/Terraform';
 const Knowledge = () => {
     return (
         <div style={{ padding: '2%' }}>
+                                <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
+                                <Divider sx={{ my: 2, borderColor: 'white' }} />
+
             <Grid container style={{ width: '100vw', height: '100vh' }}>
                 {/* Sidebar */}
                 <Grid item xs={12} md={3} sx={{ padding: 2, borderRight: '1px solid #ddd' }}>
@@ -34,10 +37,7 @@ const Knowledge = () => {
                 </Grid>
 
                 {/* Main Content Area */}
-                <Grid item xs={12} md={9} sx={{ padding: 3 }}>
-                    <Typography variant="h3" gutterBottom>Knowledge Base</Typography>
-                    <Divider sx={{ my: 2, borderColor: 'orange' }} />
-                    
+                <Grid item xs={12} md={9} sx={{ padding: 3 }}>                    
                     <div id="cicd" style={{ textAlign: 'left', scrollMarginTop: '80px' }}>
                         <CICD />
                     </div>
