@@ -10,7 +10,7 @@ There are many advantages to using Kubernetes as your container orchestrator, an
 Container orchestration is the automated management and coordination of containers in your environment.
 Container orchestrators handle the following:
 - Automated deployment - automatically deploying your containers when you need them
-- Auto-scaling - Scaling your containers up or down based on demand
+- Auto-scaling - Scaling your containers up or down based on demand (horizontally)
 - Load balancing - directing traffic between containers to ensure reliability
 - Self healing - detects failures and restarts containers as needed
 - Networking - coordinates the communication between containers
@@ -45,9 +45,72 @@ Containers  Containers  Containers
 \`\`\`
 
 #### Anatomy of Kubernetes
+A kubernetes cluster is made up of Nodes which contain pods which run containers. 
+- **Node** - A server in a kubernetes cluster. Could be a master or a worker
+  - Master node - Manages the cluster via the control plane
+  - Worker node - runs the pods/applications
+- **Pod** - A group of one or more containers. The smallest deployable unit. 
+- **Namespace** - A way to separate different resources. Good way to divide different users or different applications
+- **Label** - Key value pairs attached to pods for organizing them
+- **Deployment** - Manages the deployment of pods
+- **Service** - Exposes pods to a network for users
+- **Configmap** - stores configuration data and secrets
+     
+Control plane components:
+- API Server - exposes the kubernetes API for communication with the nodes 
+- etcd - k/v store for cluster data
+- Controller manager - a daemon that embeds the core control loops shipped with Kubernetes. Regulates cluster state
+- Scheduler - assigns new pods to nodes
+      
+Node components:
+- Kubelet - executes pod requirements and manages resources
+- Kube-proxy - manages network for pod communication
+- Container runtime - runs containers (ex: Docker)
+    
+\`\`\`
++------------------------------------------------------------+
+|                     Kubernetes Cluster                     |
+|                                                            |
+|  +----------------------+      +----------------------+    |
+|  |      Master Node     |      |     Worker Node      |    |
+|  |  +---------------+   |      |  +---------------+   |    |
+|  |  | API Server    |   |      |  |    Kubelet    |   |    |
+|  |  +---------------+   |      |  +---------------+   |    |
+|  |  | Controller    |   |      |  |   Kube-Proxy  |   |    |
+|  |  | Manager       |   |      |  +---------------+   |    |
+|  |  +---------------+   |      |  |ContainerRuntime|  |    |
+|  |  | Scheduler     |   |      |  +---------------+   |    |
+|  |  +---------------+   |      |  |      Pods     |   |    |
+|  |  | etcd          |   |      |  | (Containers)  |   |    |
+|  |  +---------------+   |      |  +---------------+   |    |
+|  |                      |      |                      |    |
+|  |  +---------------+   |      |  +---------------+   |    |
+|  |  |   kubectl     |<-------->|  |               |   |    |
+|  |  |               |   |      |  |  Network      |   |    |
+|  |  +---------------+   |      |  |               |   |    |
+|  |                      |      |  +---------------+   |    |
+|  +----------------------+      +----------------------+    |
+|                                                            |
+|                  Additional Worker Nodes                   |
+|                      +----------------+                    |
+|                      |    Worker Node |                    |
+|                      +----------------+                    |
+|                                                            |
++------------------------------------------------------------+
 
+\`\`\`
 
-#### Helm
+#### kubectl
+kubectl is the kubernetes command line interface that allows you to communicate with your cluster
+    
+Here are some common kubectl commands:
+- kubectl get nodes - List all nodes
+- kubectl get pods - List all pods
+- kubectl describe pod [pod name] - Get detailed information about a pod 
+- kubectl logs [pod name] - View logs of a pod 
+- kubectl apply -f [yaml file] - Apply configuration from a file 
+- kubectl scale deployment [deployment name] --replicas=[number of replicas] - Scale deployment up or down
+
 
 `;
 
