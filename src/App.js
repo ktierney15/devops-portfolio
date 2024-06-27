@@ -28,9 +28,6 @@ function App() {
         </Routes>
       </BrowserRouter>
       </header>
-      {/* <div>
-        <Footer />
-      </div> */}
     </div>
   );
 }
