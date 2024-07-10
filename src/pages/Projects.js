@@ -63,7 +63,7 @@ const Projects = () => {
             background: 'rgba(0, 0, 0, 0.2)',
         },
         img: {
-            width: '100%',
+            width: '80%',
             maxWidth: '80%',
             height: 'auto',
             marginBottom: '8px',
@@ -144,3 +144,4 @@ const Projects = () => {
 };
 
 export default Projects;
+
