@@ -21,7 +21,6 @@ const Projects = () => {
 
     const styles = {
         container: {
-            padding: '16px',
             maxWidth: '90vw',
             margin: '0 auto',
             position: 'relative',
