@@ -21,7 +21,6 @@ const Projects = () => {
 
     const styles = {
         container: {
-            padding: '16px',
             maxWidth: '90vw',
             margin: '0 auto',
             position: 'relative',
@@ -63,7 +62,7 @@ const Projects = () => {
             background: 'rgba(0, 0, 0, 0.2)',
         },
         img: {
-            width: '100%',
+            width: '80%',
             maxWidth: '80%',
             height: 'auto',
             marginBottom: '8px',
@@ -144,3 +143,4 @@ const Projects = () => {
 };
 
 export default Projects;
+
