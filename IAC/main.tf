@@ -45,13 +45,13 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = "kt15-${var.app_name}"
-  policy = data.aws_iam_policy_document.website_policy.json
-}
+# resource "aws_s3_bucket_policy" "bucket_policy" {
+#   bucket = "kt15-${var.app_name}"
+#   policy = data.aws_iam_policy_document.website_policy.json
+# }
 
 resource "aws_s3_bucket_policy" "website_policy" {
-  bucket = aws_s3_bucket.website_bucket.id
+  bucket = aws_s3_bucket.bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -61,7 +61,7 @@ resource "aws_s3_bucket_policy" "website_policy" {
         Effect    = "Allow",
         Principal = "*",
         Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.website_bucket.arn}/*"
+        Resource  = "${aws_s3_bucket.bucket.arn}/*"
       }
     ]
   })
