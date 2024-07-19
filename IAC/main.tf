@@ -48,14 +48,15 @@ resource "aws_s3_bucket" "bucket" {
 resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.bucket.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
+  block_public_policy     = false 
   restrict_public_buckets = false
+  block_public_acls       = true 
+  ignore_public_acls      = true
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id
+  depends_on = [ aws_s3_bucket_public_access_block.public_access ]
 
   policy = jsonencode({
     Version = "2012-10-17",
