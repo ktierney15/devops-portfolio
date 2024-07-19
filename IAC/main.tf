@@ -45,24 +45,40 @@ resource "aws_s3_bucket" "bucket" {
   }
 }
 
-# resource "aws_s3_bucket_policy" "bucket_policy" {
-#   bucket = "kt15-${var.app_name}"
-#   policy = data.aws_iam_policy_document.website_policy.json
-# }
-
 resource "aws_s3_bucket_policy" "website_policy" {
+  bucket = aws_s3_bucket.bucket.id
+
+  resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Sid       = "PublicReadGetObject",
-        Effect    = "Allow",
+        Sid = "PublicReadGetObject",
+        Effect = "Allow",
         Principal = "*",
-        Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.bucket.arn}/*"
+        Action = "s3:GetObject",
+        Resource = "${aws_s3_bucket.bucket.arn}/*"
+      },
+      {
+        Sid = "AllowBucketPolicyManagement",
+        Effect = "Allow",
+        Principal = "*",
+        Action = [
+          "s3:PutBucketPolicy",
+          "s3:GetBucketPolicy",
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:GetObject"
+        ],
+        Resource = [
+          "${aws_s3_bucket.bucket.arn}",
+          "${aws_s3_bucket.bucket.arn}/*"
+        ]
       }
     ]
   })
+}
+
 }
