@@ -43,6 +43,14 @@ resource "aws_s3_bucket" "bucket" {
     index_document = "index.html"
     error_document = "index.html"
   }
+
+  public_access_block_configuration {
+    block_public_acls = false
+    ignore_public_acls = false
+    block_public_policy = false
+    restrict_public_buckets = false
+  }
+  
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
