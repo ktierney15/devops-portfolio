@@ -36,7 +36,7 @@ resource "aws_s3_bucket" "bucket" {
   bucket = "kt15-${var.app_name}"
   tags = {
     "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
-    "Version" = var.version
+    "Version" = var.ver
   }
 
   website {

@@ -8,7 +8,7 @@ variable "source_path" {
     description = "Path to source code"
 }
 
-variable "version" {
+variable "ver" {
     type        = string
     description = "Version of application"
 }
