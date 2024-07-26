@@ -29,11 +29,6 @@ resource "aws_s3_object" "app" {
   source   = "${var.source_path}/${each.value}"
   etag     = filemd5("${var.source_path}/${each.value}")
   content_type = lookup(local.content_type_map, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
-
-  # Debug output to verify correct file extensions and content types
-  provisioner "local-exec" {
-    command = "echo 'Uploading ${each.value} with content type ${lookup(local.content_type_map, split('.', each.value)[length(split('.', each.value)) - 1], 'application/octet-stream')}'"
-  }
 }
 
 resource "aws_s3_bucket" "bucket" {
