@@ -70,7 +70,7 @@ jobs:
         working-directory: ./IAC
 
       - name: Plan Terraform
-        run: terraform plan -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID_NEW }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY_NEW }}" -var="app_name=${{ github.event.repository.name }}" -var="source_path=./build" -var="ver=${{ steps.version.outputs.VERSION }}" -out=plan.tfplan
+        run: terraform plan -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID_NEW }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY_NEW }}" -var="app_name=${{ github.event.repository.name }}" -var="source_path=./build" -var="ver=${{ steps.version.outputs.VERSION }}" -var="route53_zone_id=${{ vars.ROUTE53_ZONE_ID }}" -var="domain_name=${{ vars.DOMAIN_NAME }}" -out=plan.tfplan
         working-directory: ./IAC
 
       - name: Apply Terraform

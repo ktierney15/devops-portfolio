@@ -72,3 +72,41 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
     ]
   })
 }
+
+
+# route 53
+resource "aws_route53_record" "www" {
+  zone_id = var.route53_zone_id
+  name    = "www.${var.domain_name}"
+  type    = "A"
+
+  alias {
+    name                   = aws_s3_bucket_website_configuration.website.bucket_domain_name
+    zone_id                = aws_s3_bucket_website_configuration.website.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "root" {
+  zone_id = var.route53_zone_id
+  name    = var.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_s3_bucket_website_configuration.website.bucket_domain_name
+    zone_id                = aws_s3_bucket_website_configuration.website.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.bucket.bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "index.html"
+  }
+}
