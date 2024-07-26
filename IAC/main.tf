@@ -98,3 +98,15 @@ resource "aws_route53_record" "root" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.bucket.id
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "index.html"
+  }
+}
