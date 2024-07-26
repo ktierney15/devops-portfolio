@@ -1,36 +1,26 @@
 provider "aws" {
-  region = "us-east-1"
+  region     = "us-east-1"
   access_key = var.aws_access_key
   secret_key = var.aws_secret_key
 }
 
-
 locals {
   content_type_map = {
-    "js" = "application/javascript"
+    "js"  = "application/javascript"
     "jsx" = "application/javascript"
     "html" = "text/html"
     "css" = "text/css"
-    "json" = "application.json"
+    "json" = "application/json"
   }
 }
 
 terraform {
   backend "s3" {
-    bucket         = "kt15-terraform-state-files"
-    key            = "devops-portfolio/terraform.tfstate"
-    region         = "us-east-1"
+    bucket = "kt15-terraform-state-files"
+    key    = "devops-portfolio/terraform.tfstate"
+    region = "us-east-1"
   }
 }
-
-# resource "aws_s3_object" "app" {
-#   for_each = fileset("${var.source_path}", "**")
-#   bucket = aws_s3_bucket.bucket.bucket
-#   key = each.value
-#   source = "${var.source_path}/${each.value}"
-#   etag = filemd5("${var.source_path}/${each.value}")
-#   content_type = lookup(local.content_type_map, split(".", "${var.source_path}/${each.value}")[1], "application/octet-stream")
-# }
 
 resource "aws_s3_object" "app" {
   for_each = fileset("${var.source_path}", "**")
@@ -38,14 +28,19 @@ resource "aws_s3_object" "app" {
   key      = each.value
   source   = "${var.source_path}/${each.value}"
   etag     = filemd5("${var.source_path}/${each.value}")
-  content_type = lookup(local.content_type_map, split(".", each.value)[1], "application/octet-stream")
+  content_type = lookup(local.content_type_map, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
+
+  # Debug output to verify correct file extensions and content types
+  provisioner "local-exec" {
+    command = "echo 'Uploading ${each.value} with content type ${lookup(local.content_type_map, split('.', each.value)[length(split('.', each.value)) - 1], 'application/octet-stream')}'"
+  }
 }
 
 resource "aws_s3_bucket" "bucket" {
   bucket = "kt15-${var.app_name}"
   tags = {
     "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
-    "Version" = var.ver
+    "Version"           = var.ver
   }
 
   website {
@@ -65,7 +60,7 @@ resource "aws_s3_bucket_public_access_block" "public_access" {
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
   bucket = aws_s3_bucket.bucket.id
-  depends_on = [ aws_s3_bucket_public_access_block.public_access ]
+  depends_on = [aws_s3_bucket_public_access_block.public_access]
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -82,4 +77,3 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
     ]
   })
 }
-

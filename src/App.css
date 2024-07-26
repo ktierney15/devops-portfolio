@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #282c34
 }
 
 body {
@@ -21,11 +22,10 @@ body {
 
 @media (max-width: 768px) {
   .hidden-on-small {
-    display: none; /* Hide the component on small screens */
+    display: none; 
   }
 }
 
-/* Navigation styles */
 
 .nav-bar {
   background-color: orange;
