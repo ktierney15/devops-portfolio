@@ -63,7 +63,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
       {
         Effect = "Allow",
         Principal = "*",
-        Action = "s3:*",
+        Action = "s3:GetObject",
         Resource = [
           "${aws_s3_bucket.bucket.arn}",
           "${aws_s3_bucket.bucket.arn}/*"
@@ -81,7 +81,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com"
+    name                   = aws_s3_bucket.bucket.website_endpoint #"kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com"
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
@@ -93,7 +93,7 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com" # aws_s3_bucket.bucket.bucket_domain_name
+    name                   = aws_s3_bucket.bucket.website_endpoint # "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com" # aws_s3_bucket.bucket.bucket_domain_name
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
@@ -109,14 +109,4 @@ resource "aws_s3_bucket_website_configuration" "website" {
   error_document {
     key = "index.html"
   }
-  routing_rules = jsonencode([
-    {
-      Condition = {
-        HttpErrorCodeReturnedEquals = "404"
-      },
-      Redirect = {
-        ReplaceKeyWith = "index.html"
-      }
-    }
-  ])
 }
