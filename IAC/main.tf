@@ -42,13 +42,6 @@ resource "aws_s3_bucket" "bucket" {
     index_document = "index.html"
     error_document = "index.html"
   }
-
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["GET"]
-    allowed_origins = ["*"]
-    expose_headers  = []
-  }
 }
 
 resource "aws_s3_bucket_public_access_block" "public_access" {
@@ -116,4 +109,14 @@ resource "aws_s3_bucket_website_configuration" "website" {
   error_document {
     key = "index.html"
   }
+  routing_rules = jsonencode([
+    {
+      Condition = {
+        HttpErrorCodeReturnedEquals = "404"
+      },
+      Redirect = {
+        ReplaceKeyWith = "index.html"
+      }
+    }
+  ])
 }
