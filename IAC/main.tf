@@ -76,31 +76,27 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 
 # route 53
 resource "aws_route53_record" "www" {
-  zone_id = data.aws_route53_zone.selected.id #var.route53_zone_id
+  zone_id = var.route53_zone_id
   name    = "www.${var.domain_name}"
   type    = "A"
 
   alias {
-    name                   = "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com"
+    name                   = "kt15-${var.app_name}.s3-website.us-east-1.amazonaws.com"
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
 
 resource "aws_route53_record" "root" {
-  zone_id = data.aws_route53_zone.selected.id #var.route53_zone_id
+  zone_id = var.route53_zone_id
   name    = var.domain_name
   type    = "A"
 
   alias {
-    name                   = "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com" # aws_s3_bucket.bucket.bucket_domain_name
+    name                   = "kt15-${var.app_name}.s3-website.us-east-1.amazonaws.com" # aws_s3_bucket.bucket.bucket_domain_name
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
-}
-
-data "aws_route53_zone" "selected" {
-  id = var.route53_zone_id
 }
 
 # data "aws_route53_zone" "selected" {
