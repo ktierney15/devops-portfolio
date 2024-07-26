@@ -81,7 +81,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket.bucket.bucket_domain_name #aws_s3_bucket_website_configuration.website.bucket_domain_name
+    name                   = "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com"
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
@@ -93,20 +93,8 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket.bucket.bucket_domain_name #aws_s3_bucket_website_configuration.website.bucket_domain_name
+    name                   = "kt15-${var.app_name}.s3-website-us-east-1.amazonaws.com" # aws_s3_bucket.bucket.bucket_domain_name
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
-
-# resource "aws_s3_bucket_website_configuration" "website" {
-#   bucket = aws_s3_bucket.bucket.bucket
-
-#   index_document {
-#     suffix = "index.html"
-#   }
-
-#   error_document {
-#     key = "index.html"
-#   }
-# }
