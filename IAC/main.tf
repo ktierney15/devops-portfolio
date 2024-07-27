@@ -38,9 +38,21 @@ resource "aws_s3_bucket" "bucket" {
     "Version"           = var.ver
   }
 
-  website {
-    index_document = "index.html"
-    error_document = "index.html"
+  # website {
+  #   index_document = "index.html"
+  #   error_document = "index.html"
+  # }
+}
+
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.bucket.bucket
+
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "index.html"
   }
 }
 
@@ -81,8 +93,8 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = replace(aws_s3_bucket.bucket.website_endpoint, "s3-website-", "s3-website.")
-    zone_id                = aws_s3_bucket.bucket.hosted_zone_id
+    name                   = replace(aws_s3_bucket_website_configuration.website.website_endpoint, "s3-website-", "s3-website.")
+    zone_id                = aws_s3_bucket_website_configuration.website.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -93,8 +105,8 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = replace(aws_s3_bucket.bucket.website_endpoint, "s3-website-", "s3-website.")
-    zone_id                = aws_s3_bucket.bucket.hosted_zone_id
+    name                   = replace(aws_s3_bucket_website_configuration.website.website_endpoint, "s3-website-", "s3-website.")
+    zone_id                = aws_s3_bucket_website_configuration.website.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -104,14 +116,3 @@ resource "aws_route53_record" "root" {
 #   private_zone = false
 # }
 
-# resource "aws_s3_bucket_website_configuration" "website" {
-#   bucket = aws_s3_bucket.bucket.bucket
-
-#   index_document {
-#     suffix = "index.html"
-#   }
-
-#   error_document {
-#     key = "index.html"
-#   }
-# }
