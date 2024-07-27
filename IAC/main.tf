@@ -100,7 +100,7 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket_website_configuration.website.website_domain
+    name                   = aws_s3_bucket_website_configuration.redirect_website.website_domain
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
