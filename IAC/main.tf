@@ -94,7 +94,7 @@ resource "aws_route53_record" "www" {
 
   alias {
     name                   = replace(aws_s3_bucket_website_configuration.website.website_endpoint, "s3-website-", "s3-website.")
-    zone_id                = aws_s3_bucket_website_configuration.website.hosted_zone_id
+    zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -106,7 +106,7 @@ resource "aws_route53_record" "root" {
 
   alias {
     name                   = replace(aws_s3_bucket_website_configuration.website.website_endpoint, "s3-website-", "s3-website.")
-    zone_id                = aws_s3_bucket_website_configuration.website.hosted_zone_id
+    zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
