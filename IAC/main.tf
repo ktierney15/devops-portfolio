@@ -81,7 +81,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = "kt15-${var.app_name}.s3-website.us-east-1.amazonaws.com"
+    name                   = replace(aws_s3_bucket.bucket.website_endpoint, "s3-website-", "s3-website.")
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
@@ -93,7 +93,7 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = "kt15-${var.app_name}.s3-website.us-east-1.amazonaws.com"
+    name                   = replace(aws_s3_bucket.bucket.website_endpoint, "s3-website-", "s3-website.")
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
