@@ -105,7 +105,7 @@ resource "aws_route53_record" "root" {
 # }
 
 resource "aws_s3_bucket_website_configuration" "website" {
-  bucket = aws_s3_bucket.bucket.id
+  bucket = aws_s3_bucket.bucket.bucket
 
   index_document {
     suffix = "index.html"
