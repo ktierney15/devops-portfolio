@@ -37,11 +37,6 @@ resource "aws_s3_bucket" "bucket" {
     "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
     "Version"           = var.ver
   }
-
-  # website {
-  #   index_document = "index.html"
-  #   error_document = "index.html"
-  # }
 }
 
 resource "aws_s3_bucket_website_configuration" "website" {
@@ -93,7 +88,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket_website_configuration.website.website_domain # replace(aws_s3_bucket_website_configuration.website.website_domain, "s3-website-", "s3-website.")
+    name                   = aws_s3_bucket_website_configuration.website.website_domain
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
@@ -105,14 +100,59 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket_website_configuration.website.website_domain # replace(aws_s3_bucket_website_configuration.website.website_domain, "s3-website-", "s3-website.")
+    name                   = aws_s3_bucket_website_configuration.website.website_domain
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
 
-# data "aws_route53_zone" "selected" {
-#   name         = "${var.domain_name}."
-#   private_zone = false
-# }
 
+
+
+
+#### REDIRECT BUCKET #####
+resource "aws_s3_bucket" "redirect_bucket" {
+  bucket = var.domain_name
+  tags = {
+    "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
+    "Version"           = var.ver
+  }
+}
+
+resource "aws_s3_bucket_website_configuration" "redirect_website" {
+  bucket = aws_s3_bucket.redirect_bucket.bucket
+
+  redirect_all_requests_to {
+    host_name = "www.${var.domain_name}"
+    protocol  = "http"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "redirect_public_access" {
+  bucket = aws_s3_bucket.redirect_bucket.id
+
+  block_public_policy     = false 
+  restrict_public_buckets = false
+  block_public_acls       = false 
+  ignore_public_acls      = false
+}
+
+resource "aws_s3_bucket_policy" "redirect_bucket_policy" {
+  bucket = aws_s3_bucket.redirect_bucket.id
+  depends_on = [aws_s3_bucket_public_access_block.redirect_public_access]
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = "*",
+        Action = "s3:GetObject",
+        Resource = [
+          "${aws_s3_bucket.bucket.arn}",
+          "${aws_s3_bucket.bucket.arn}/*"
+        ]
+      }
+    ]
+  })
+}
