@@ -149,8 +149,8 @@ resource "aws_s3_bucket_policy" "redirect_bucket_policy" {
         Principal = "*",
         Action = "s3:GetObject",
         Resource = [
-          "${aws_s3_bucket.bucket.arn}",
-          "${aws_s3_bucket.bucket.arn}/*"
+          "${aws_s3_bucket.redirect_bucket.arn}",
+          "${aws_s3_bucket.redirect_bucket.arn}/*"
         ]
       }
     ]
