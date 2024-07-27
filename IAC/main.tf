@@ -32,7 +32,7 @@ resource "aws_s3_object" "app" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = "kt15-${var.app_name}"
+  bucket = var.domain_name # "kt15-${var.app_name}"
   tags = {
     "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
     "Version"           = var.ver
@@ -93,7 +93,7 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = replace(aws_s3_bucket_website_configuration.website.website_endpoint, "s3-website-", "s3-website.")
+    name                   = aws_s3_bucket_website_configuration.website.website_domain # replace(aws_s3_bucket_website_configuration.website.website_domain, "s3-website-", "s3-website.")
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
@@ -105,7 +105,7 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = replace(aws_s3_bucket_website_configuration.website.website_endpoint, "s3-website-", "s3-website.")
+    name                   = aws_s3_bucket_website_configuration.website.website_domain # replace(aws_s3_bucket_website_configuration.website.website_domain, "s3-website-", "s3-website.")
     zone_id                = aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
