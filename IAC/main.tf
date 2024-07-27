@@ -120,27 +120,10 @@ resource "aws_s3_bucket" "redirect_bucket" {
 resource "aws_s3_bucket_website_configuration" "redirect_website" {
   bucket = aws_s3_bucket.redirect_bucket.bucket
 
-  index_document {
-    suffix = "index.html"
+  redirect_all_requests_to {
+    host_name = aws_s3_bucket_website_configuration.website.website_endpoint #"www.${var.domain_name}"
+    protocol  = "http"
   }
-
-  error_document {
-    key = "index.html"
-  }
-
-  # redirect_all_requests_to {
-  #   host_name = aws_s3_bucket_website_configuration.website.website_endpoint #"www.${var.domain_name}"
-  #   protocol  = "http"
-  # }
-}
-
-resource "aws_s3_object" "redirect_app" {
-  for_each = fileset("${var.source_path}", "**")
-  bucket   = aws_s3_bucket.redirect_bucket.bucket
-  key      = each.value
-  source   = "${var.source_path}/${each.value}"
-  etag     = filemd5("${var.source_path}/${each.value}")
-  content_type = lookup(local.content_type_map, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
 }
 
 resource "aws_s3_bucket_public_access_block" "redirect_public_access" {
