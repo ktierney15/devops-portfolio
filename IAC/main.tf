@@ -123,7 +123,7 @@ resource "aws_s3_bucket_website_configuration" "redirect_website" {
   bucket = aws_s3_bucket.redirect_bucket.bucket
 
   redirect_all_requests_to {
-    host_name = "www.${var.domain_name}"
+    host_name = "http://www.${var.domain_name}"
     protocol  = "http"
   }
 }
