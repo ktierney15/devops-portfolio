@@ -80,8 +80,58 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   })
 }
 
+# Cloudfront
+resource "aws_cloudfront_distrobution" "distrobution" {
+  origin {
+    domain_name = "${aws_s3_bucket.bucket.bucket}.S3.amazonaws.com"
+    origin_access_control_id = aws_cloudfront_origin_access_control.origin_access_control.id
+    origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
+    origin_path = null 
+  }
 
-# route 53
+  default_cache_behavior {
+    allowed_methods = ["GET", "HEAD"]
+    cached_methods = ["GET", "HEAD"]
+    target_origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+  }
+
+  viewer_certificate {
+    cloudfront_default_certificate = true
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  comment = "${aws_s3_bucket.bucket.bucket}"
+  default_root_object = "index.html"
+  aliases = [var.domain_name]
+  enabled = true
+  is_ipv6_enabled = true
+
+}
+
+resource "aws_cloudfront_origin_access_control" "origin_access_control" {
+  name = "access-control-${aws_s3_bucket.bucket.bucket}"
+  origin_access_control_origin_type = "s3"
+  signing_behavior = "always"
+  signing_protocol = "sig4"
+}
+
+
+# route 53 CHANGE THIS TO CLOUDFRONT DISTRO ENDPOINT
 resource "aws_route53_record" "www" {
   zone_id = var.route53_zone_id
   name    = "www.${var.domain_name}"
@@ -109,48 +159,48 @@ resource "aws_route53_record" "root" {
 
 
 #### REDIRECT BUCKET #####
-resource "aws_s3_bucket" "redirect_bucket" {
-  bucket = var.domain_name
-  tags = {
-    "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
-    "Version"           = var.ver
-  }
-}
+# resource "aws_s3_bucket" "redirect_bucket" {
+#   bucket = var.domain_name
+#   tags = {
+#     "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
+#     "Version"           = var.ver
+#   }
+# }
 
-resource "aws_s3_bucket_website_configuration" "redirect_website" {
-  bucket = aws_s3_bucket.redirect_bucket.bucket
+# resource "aws_s3_bucket_website_configuration" "redirect_website" {
+#   bucket = aws_s3_bucket.redirect_bucket.bucket
 
-  redirect_all_requests_to {
-    host_name = aws_s3_bucket_website_configuration.website.website_endpoint #"www.${var.domain_name}"
-    protocol  = "http"
-  }
-}
+#   redirect_all_requests_to {
+#     host_name = aws_s3_bucket_website_configuration.website.website_endpoint #"www.${var.domain_name}"
+#     protocol  = "http"
+#   }
+# }
 
-resource "aws_s3_bucket_public_access_block" "redirect_public_access" {
-  bucket = aws_s3_bucket.redirect_bucket.id
+# resource "aws_s3_bucket_public_access_block" "redirect_public_access" {
+#   bucket = aws_s3_bucket.redirect_bucket.id
 
-  block_public_policy     = false 
-  restrict_public_buckets = false
-  block_public_acls       = false 
-  ignore_public_acls      = false
-}
+#   block_public_policy     = false 
+#   restrict_public_buckets = false
+#   block_public_acls       = false 
+#   ignore_public_acls      = false
+# }
 
-resource "aws_s3_bucket_policy" "redirect_bucket_policy" {
-  bucket = aws_s3_bucket.redirect_bucket.id
-  depends_on = [aws_s3_bucket_public_access_block.redirect_public_access]
+# resource "aws_s3_bucket_policy" "redirect_bucket_policy" {
+#   bucket = aws_s3_bucket.redirect_bucket.id
+#   depends_on = [aws_s3_bucket_public_access_block.redirect_public_access]
 
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Principal = "*",
-        Action = "s3:GetObject",
-        Resource = [
-          "${aws_s3_bucket.redirect_bucket.arn}",
-          "${aws_s3_bucket.redirect_bucket.arn}/*"
-        ]
-      }
-    ]
-  })
-}
+#   policy = jsonencode({
+#     Version = "2012-10-17",
+#     Statement = [
+#       {
+#         Effect = "Allow",
+#         Principal = "*",
+#         Action = "s3:GetObject",
+#         Resource = [
+#           "${aws_s3_bucket.redirect_bucket.arn}",
+#           "${aws_s3_bucket.redirect_bucket.arn}/*"
+#         ]
+#       }
+#     ]
+#   })
+# }
