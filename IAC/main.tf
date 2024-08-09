@@ -81,7 +81,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 # Cloudfront
-resource "aws_cloudfront_distrobution" "distrobution" {
+resource "aws_cloudfront_distribution" "distribution" {
   origin {
     domain_name = "${aws_s3_bucket.bucket.bucket}.S3.amazonaws.com"
     origin_access_control_id = aws_cloudfront_origin_access_control.origin_access_control.id
@@ -138,8 +138,8 @@ resource "aws_route53_record" "www" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket_website_configuration.website.website_domain
-    zone_id                = aws_s3_bucket.bucket.hosted_zone_id
+    name                   = aws_cloudfront_distribution.distribution.domain_name # aws_s3_bucket_website_configuration.website.website_domain
+    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id # aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
@@ -150,57 +150,9 @@ resource "aws_route53_record" "root" {
   type    = "A"
 
   alias {
-    name                   = aws_s3_bucket_website_configuration.redirect_website.website_domain
-    zone_id                = aws_s3_bucket.bucket.hosted_zone_id
+    name                   = aws_cloudfront_distribution.distribution.domain_name # aws_s3_bucket_website_configuration.website.website_domain
+    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id # aws_s3_bucket.bucket.hosted_zone_id
     evaluate_target_health = false
   }
 }
 
-
-
-#### REDIRECT BUCKET #####
-# resource "aws_s3_bucket" "redirect_bucket" {
-#   bucket = var.domain_name
-#   tags = {
-#     "Github Repository" = "https://github.com/ktierney15/${var.app_name}"
-#     "Version"           = var.ver
-#   }
-# }
-
-# resource "aws_s3_bucket_website_configuration" "redirect_website" {
-#   bucket = aws_s3_bucket.redirect_bucket.bucket
-
-#   redirect_all_requests_to {
-#     host_name = aws_s3_bucket_website_configuration.website.website_endpoint #"www.${var.domain_name}"
-#     protocol  = "http"
-#   }
-# }
-
-# resource "aws_s3_bucket_public_access_block" "redirect_public_access" {
-#   bucket = aws_s3_bucket.redirect_bucket.id
-
-#   block_public_policy     = false 
-#   restrict_public_buckets = false
-#   block_public_acls       = false 
-#   ignore_public_acls      = false
-# }
-
-# resource "aws_s3_bucket_policy" "redirect_bucket_policy" {
-#   bucket = aws_s3_bucket.redirect_bucket.id
-#   depends_on = [aws_s3_bucket_public_access_block.redirect_public_access]
-
-#   policy = jsonencode({
-#     Version = "2012-10-17",
-#     Statement = [
-#       {
-#         Effect = "Allow",
-#         Principal = "*",
-#         Action = "s3:GetObject",
-#         Resource = [
-#           "${aws_s3_bucket.redirect_bucket.arn}",
-#           "${aws_s3_bucket.redirect_bucket.arn}/*"
-#         ]
-#       }
-#     ]
-#   })
-# }
