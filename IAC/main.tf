@@ -127,7 +127,7 @@ resource "aws_cloudfront_origin_access_control" "origin_access_control" {
   name = "access-control-${aws_s3_bucket.bucket.bucket}"
   origin_access_control_origin_type = "s3"
   signing_behavior = "always"
-  signing_protocol = "sig4"
+  signing_protocol = "sigv4"
 }
 
 
