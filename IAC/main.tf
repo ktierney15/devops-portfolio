@@ -119,15 +119,15 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-
   # viewer_certificate {
-  #   acm_certificate_arn            = aws_acm_certificate.cert.arn
-  #   ssl_support_method              = "sni-only"
-  #   minimum_protocol_version        = "TLSv1.2_2018"
+  #   cloudfront_default_certificate = true
   # }
+
+  viewer_certificate {
+    acm_certificate_arn            = aws_acm_certificate.cert.arn
+    ssl_support_method              = "sni-only"
+    minimum_protocol_version        = "TLSv1.2_2018"
+  }
 
   tags = {
     Name = "CloudFront for ${var.domain_name}"
@@ -138,35 +138,35 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   comment = "Access Identity for S3 bucket"
 }
 
-# resource "aws_acm_certificate" "cert" {
-#   domain_name       = "www.${var.domain_name}"
-#   validation_method = "DNS"
+resource "aws_acm_certificate" "cert" {
+  domain_name       = "www.${var.domain_name}"
+  validation_method = "DNS"
 
-#   tags = {
-#     Name = "${var.domain_name} Certificate"
-#   }
-# }
+  tags = {
+    Name = "${var.domain_name} Certificate"
+  }
+}
 
-# resource "aws_route53_record" "cert_validation" {
-#   for_each = {
-#     for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
-#       name   = dvo.resource_record_name
-#       type   = dvo.resource_record_type
-#       record = dvo.resource_record_value
-#     }
-#   }
+resource "aws_route53_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
 
-#   zone_id = var.route53_zone_id
-#   name    = each.value.name
-#   type    = each.value.type
-#   records = [each.value.record]
-#   ttl     = 60
-# }
+  zone_id = var.route53_zone_id
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.record]
+  ttl     = 60
+}
 
-# resource "aws_acm_certificate_validation" "cert_validation" {
-#   certificate_arn         = aws_acm_certificate.cert.arn
-#   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
-# }
+resource "aws_acm_certificate_validation" "cert_validation" {
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
 
 
 
