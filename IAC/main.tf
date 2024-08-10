@@ -90,7 +90,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  aliases = ["*.${var.domain_name}", var.domain_name]
+  aliases = ["www.${var.domain_name}", var.domain_name]
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
@@ -139,7 +139,8 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name       = "www.${var.domain_name}"
+  domain_name       = var.domain_name
+  subject_alternative_names = ["www.${var.domain_name}"] 
   validation_method = "DNS"
 
   tags = {
