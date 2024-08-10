@@ -83,7 +83,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 # Cloudfront
 resource "aws_cloudfront_distribution" "distribution" {
   origin {
-    domain_name = aws_s3_bucket.bucket.website_endpoint # aws_s3_bucket_website_configuration.website.website_domain # "${aws_s3_bucket.bucket.bucket}.S3.amazonaws.com"
+    domain_name = aws_s3_bucket.bucket.website_domain # aws_s3_bucket_website_configuration.website.website_domain # "${aws_s3_bucket.bucket.bucket}.S3.amazonaws.com"
     origin_access_control_id = aws_cloudfront_origin_access_control.origin_access_control.id
     origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
     origin_path = null 
