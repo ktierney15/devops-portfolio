@@ -119,10 +119,6 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  # viewer_certificate {
-  #   cloudfront_default_certificate = true
-  # }
-
   viewer_certificate {
     acm_certificate_arn            = aws_acm_certificate.cert.arn
     ssl_support_method              = "sni-only"
