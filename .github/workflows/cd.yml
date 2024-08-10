@@ -1,4 +1,4 @@
-name: CD
+name: CD 
 on:
   workflow_dispatch:
   
@@ -20,59 +20,59 @@ jobs:
           fi
 
   Deploy:
-    needs: Pre-Check
+    # needs: Pre-Check
     runs-on: ubuntu-latest
     env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          TF_VAR_docker_user: ${{ secrets.DOCKER_USERNAME }}
-          TF_VAR_docker_pass: ${{ secrets.DOCKERHUB_TOKEN }}
-
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_NEW }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_NEW }}
     steps:
-      - name: print name
-        run: echo ${{ github.events.repository.name }} ${{ github.ref }}
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - uses: actions/checkout@v4
+      - name: Get version
+        id: version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          ref: ${{ github.ref }}
+          node-version: '18' # or 18
 
-      - name: Configure AWS credentials
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build React App
+        run: npm run build
+
+      - name: Move Build Output to IAC Folder
+        run: |
+          mkdir -p ./IAC/build
+          mv ./build/* ./IAC/build/
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.1.9
+
+      - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ECR_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_ECR_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_NEW }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_NEW }}
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: ./IAC
 
-      - name: Build, tag, and push the image to Amazon ECR
-        id: push-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ github.event.repository.name }}
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+      - name: Validate Terraform
+        run: terraform validate
+        working-directory: ./IAC
 
-      - name: Download task definition
-        run: aws ecs describe-task-definition --task-definition aws-ecs-${{ github.event.repository.name }}-task --query taskDefinition > task-definition.json
+      - name: Plan Terraform
+        run: terraform plan -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID_NEW }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY_NEW }}" -var="app_name=${{ github.event.repository.name }}" -var="source_path=./build" -var="ver=${{ steps.version.outputs.VERSION }}" -var="route53_zone_id=${{ vars.ROUTE53_ZONE_ID }}" -var="domain_name=${{ vars.DOMAIN_NAME }}" -out=plan.tfplan
+        working-directory: ./IAC
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: update-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: ${{ github.event.repository.name }}
-          image: ${{ steps.push-image.outputs.image }}
-
-      - name: Deploy Amazon ECS task definition
-        id: deploy-task-def
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
-          service: aws-ecs-${{ github.event.repository.name }}-svc
-          cluster: aws-ecs-${{ github.event.repository.name }}
-        
+      - name: Apply Terraform
+        run: terraform apply -auto-approve plan.tfplan
+        working-directory: ./IAC
