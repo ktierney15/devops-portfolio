@@ -125,6 +125,12 @@ resource "aws_cloudfront_distribution" "cdn" {
     minimum_protocol_version        = "TLSv1.2_2018"
   }
 
+  custom_error_response {
+    error_code         = "404"
+    response_page_path = "/"
+    response_code      = 200
+  }
+
   tags = {
     Name = "CloudFront for ${var.domain_name}"
   }
