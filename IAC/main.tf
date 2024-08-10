@@ -81,78 +81,78 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
 }
 
 # Cloudfront
-resource "aws_cloudfront_distribution" "distribution" {
-  origin {
-    domain_name = aws_s3_bucket_website_configuration.website.website_endpoint # aws_s3_bucket_website_configuration.website.website_domain # "${aws_s3_bucket.bucket.bucket}.S3.amazonaws.com"
-    origin_access_control_id = aws_cloudfront_origin_access_control.origin_access_control.id
-    origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
-    origin_path = null 
-  }
+# resource "aws_cloudfront_distribution" "distribution" {
+#   origin {
+#     domain_name = aws_s3_bucket_website_configuration.website.website_endpoint # aws_s3_bucket_website_configuration.website.website_domain # "${aws_s3_bucket.bucket.bucket}.S3.amazonaws.com"
+#     origin_access_control_id = aws_cloudfront_origin_access_control.origin_access_control.id
+#     origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
+#     origin_path = null 
+#   }
 
-  default_cache_behavior {
-    allowed_methods = ["GET", "HEAD"]
-    cached_methods = ["GET", "HEAD"]
-    target_origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
-    viewer_protocol_policy = "redirect-to-https"
+#   default_cache_behavior {
+#     allowed_methods = ["GET", "HEAD"]
+#     cached_methods = ["GET", "HEAD"]
+#     target_origin_id = "S3-${aws_s3_bucket.bucket.bucket}"
+#     viewer_protocol_policy = "redirect-to-https"
 
-    forwarded_values {
-      query_string = false
+#     forwarded_values {
+#       query_string = false
 
-      cookies {
-        forward = "none"
-      }
-    }
+#       cookies {
+#         forward = "none"
+#       }
+#     }
 
-  }
+#   }
 
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
+#   viewer_certificate {
+#     cloudfront_default_certificate = true
+#   }
 
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
+#   restrictions {
+#     geo_restriction {
+#       restriction_type = "none"
+#     }
+#   }
 
-  comment = "${aws_s3_bucket.bucket.bucket}"
-  default_root_object = "index.html"
-  aliases = [var.domain_name]
-  enabled = true
-  is_ipv6_enabled = true
+#   comment = "${aws_s3_bucket.bucket.bucket}"
+#   default_root_object = "index.html"
+#   aliases = [var.domain_name]
+#   enabled = true
+#   is_ipv6_enabled = true
 
-}
+# }
 
-resource "aws_cloudfront_origin_access_control" "origin_access_control" {
-  name = "access-control-${aws_s3_bucket.bucket.bucket}"
-  origin_access_control_origin_type = "s3"
-  signing_behavior = "always"
-  signing_protocol = "sigv4"
-}
+# resource "aws_cloudfront_origin_access_control" "origin_access_control" {
+#   name = "access-control-${aws_s3_bucket.bucket.bucket}"
+#   origin_access_control_origin_type = "s3"
+#   signing_behavior = "always"
+#   signing_protocol = "sigv4"
+# }
 
 
-# route 53 CHANGE THIS TO CLOUDFRONT DISTRO ENDPOINT
-resource "aws_route53_record" "www" {
-  zone_id = var.route53_zone_id
-  name    = "www.${var.domain_name}"
-  type    = "A"
+# # route 53 CHANGE THIS TO CLOUDFRONT DISTRO ENDPOINT
+# resource "aws_route53_record" "www" {
+#   zone_id = var.route53_zone_id
+#   name    = "www.${var.domain_name}"
+#   type    = "A"
 
-  alias {
-    name                   = aws_cloudfront_distribution.distribution.domain_name # aws_s3_bucket_website_configuration.website.website_domain
-    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id # aws_s3_bucket.bucket.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
+#   alias {
+#     name                   = aws_cloudfront_distribution.distribution.domain_name # aws_s3_bucket_website_configuration.website.website_domain
+#     zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id # aws_s3_bucket.bucket.hosted_zone_id
+#     evaluate_target_health = false
+#   }
+# }
 
-resource "aws_route53_record" "root" {
-  zone_id = var.route53_zone_id
-  name    = var.domain_name
-  type    = "A"
+# resource "aws_route53_record" "root" {
+#   zone_id = var.route53_zone_id
+#   name    = var.domain_name
+#   type    = "A"
 
-  alias {
-    name                   = aws_cloudfront_distribution.distribution.domain_name # aws_s3_bucket_website_configuration.website.website_domain
-    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id # aws_s3_bucket.bucket.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
+#   alias {
+#     name                   = aws_cloudfront_distribution.distribution.domain_name # aws_s3_bucket_website_configuration.website.website_domain
+#     zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id # aws_s3_bucket.bucket.hosted_zone_id
+#     evaluate_target_health = false
+#   }
+# }
 
