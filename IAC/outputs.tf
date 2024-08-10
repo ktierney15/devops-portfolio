@@ -18,12 +18,12 @@ output "hosted_zone_id" {
   value       = aws_s3_bucket.bucket.hosted_zone_id
 }
 
-output "www_domain" {
-  description = "The www domain name"
-  value       = aws_route53_record.www.name
-}
+# output "www_domain" {
+#   description = "The www domain name"
+#   value       = aws_route53_record.www.name
+# }
 
-output "root_domain" {
-  description = "The root domain name"
-  value       = aws_route53_record.root.name
-}
+# output "root_domain" {
+#   description = "The root domain name"
+#   value       = aws_route53_record.root.name
+# }
