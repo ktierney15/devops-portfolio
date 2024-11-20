@@ -42,7 +42,28 @@ $ id [user name]
      
 
 ### SSH, redirection and permissions
-
+You can connect to a server over an unsecured network using SSH. SSH is allows you to login to a remote computer in a secure manner. 
+To connect to a computer using SSH you can run the following command:
+\`\`\`bash
+$ ssh [username]@[host name or ip]
+\`\`\`
+  
+You can generate a pem key running the following commands: 
+\`\`\`bash
+$ ssh-keygen
+$ ssh-copy-id [machines IP or host name]
+\`\`\`
+   
+Not only can you connect to a machine securely, you can transfer files too using SCP:
+\`\`\`bash
+$ scp [filename] [host you are copying to]:[path you want to copy into]
+\`\`\`
+  
+Once you have your files on your server, you can set the permissions of the file by doing the following:
+\`\`\`bash
+$ ll # shows files in current directory as well as their permissions
+$ chmod +x [executable file] # give your file execute permission (so you can run the script)
+\`\`\`
 
 `;
 
