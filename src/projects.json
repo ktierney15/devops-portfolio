@@ -1,6 +1,18 @@
 {
     "projects": [
       {
+        "name": "Pipeline Templates Repository",
+        "image": "/pipelines.jpeg",
+        "githubLink": "https://github.com/ktierney15/pipeline-templates",
+        "description": "Centralized repository for all of my pipeline templates. Includes documentation and onboarding steps"
+      },
+      {
+        "name": "MiniKube Development Cluster",
+        "image": "/minikube.png",
+        "githubLink": "https://github.com/ktierney15/minikube-cluster",
+        "description": "Development Minikube EC2 instance to test out K8s deployment configurations. Consists of terraform configuration (Deployed via CI/CD) and multiple example deployments"
+      },
+      {
         "name": "My Website",
         "image": "/my-site.png",
         "githubLink": "https://github.com/ktierney15/devops-portfolio",
@@ -11,12 +23,6 @@
         "image": "/Ms-site.png",
         "githubLink": "https://github.com/ktierney15/M-website",
         "description": "Application I created for my girlfriends training/nutrition business"
-      },
-      {
-        "name": "Pipeline Templates Repository",
-        "image": "/pipelines.jpeg",
-        "githubLink": "https://github.com/ktierney15/pipeline-templates",
-        "description": "Centralized repository for all of my pipeline templates. Includes documentation and onboarding steps"
       }
     ]
   }
