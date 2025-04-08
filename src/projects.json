@@ -1,16 +1,22 @@
 {
     "projects": [
       {
-        "name": "Pipeline Templates Repository",
-        "image": "/pipelines.jpeg",
-        "githubLink": "https://github.com/ktierney15/pipeline-templates",
-        "description": "Centralized repository for all of my pipeline templates. Includes documentation and onboarding steps"
-      },
-      {
         "name": "MiniKube Development Cluster",
         "image": "/minikube.png",
         "githubLink": "https://github.com/ktierney15/minikube-cluster",
         "description": "Development Minikube EC2 instance to test out K8s deployment configurations. Consists of terraform configuration (Deployed via CI/CD) and multiple example deployments"
+      },
+      {
+        "name": "Github Actions CLI tool",
+        "image": "/gha-deploy-logo.jpg",
+        "githubLink": "https://github.com/ktierney15/GHA-Deploy-CLI",
+        "description": "Python Command Line tool to run Github actions, specifically my CI/CD pipelines"
+      },
+      {
+        "name": "Pipeline Templates Repository",
+        "image": "/pipelines.jpeg",
+        "githubLink": "https://github.com/ktierney15/pipeline-templates",
+        "description": "Centralized repository for all of my pipeline templates. Includes documentation and onboarding steps"
       },
       {
         "name": "My Website",
