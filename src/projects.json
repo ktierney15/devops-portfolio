@@ -7,6 +7,12 @@
         "description": "Github actions linter, written in Golang"
       },
       {
+        "name": "Cloud Cost Tracker",
+        "image": "/cost-tracker.png",
+        "githubLink": "https://github.com/ktierney15/cloud-cost-tracker",
+        "description": "Python script that gathers and sumarizes cloud spending data"
+      },
+      {
         "name": "MiniKube Development Cluster",
         "image": "/minikube-cluster.png",
         "githubLink": "https://github.com/ktierney15/minikube-cluster",
