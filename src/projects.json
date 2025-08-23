@@ -10,7 +10,13 @@
         "name": "Cloud Cost Tracker",
         "image": "/cost-tracker.png",
         "githubLink": "https://github.com/ktierney15/cloud-cost-tracker",
-        "description": "Python script that gathers and sumarizes cloud spending data"
+        "description": "Python project that gathers and summarizes cloud spending data"
+      },
+      {
+        "name": "Python NewsFeed",
+        "image": "/news.png",
+        "githubLink": "https://github.com/ktierney15/news",
+        "description": "Python project that creates a custom news dashboard for you"
       },
       {
         "name": "MiniKube Development Cluster",
