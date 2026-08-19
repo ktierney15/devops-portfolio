@@ -1,146 +1,105 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Box, Typography } from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import projectsData from '../projects.json';
-import { Typography, Button, Divider } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import colors from '../theme/colors';
 
 const Projects = () => {
-    const [currentSlide, setCurrentSlide] = useState(0);
-
-    const handlePrevSlide = () => {
-        setCurrentSlide((prevSlide) =>
-            prevSlide === 0 ? projectsData.projects.length - 1 : prevSlide - 1
-        );
-    };
-
-    const handleNextSlide = () => {
-        setCurrentSlide((prevSlide) =>
-            prevSlide === projectsData.projects.length - 1 ? 0 : prevSlide + 1
-        );
-    };
-
-    const styles = {
-        container: {
-            maxWidth: '90vw',
-            margin: '0 auto',
-            position: 'relative',
-        },
-        sliderContainer: {
-            overflow: 'hidden',
-            width: '100%',
-        },
-        sliderWrapper: {
-            display: 'flex',
-            transition: 'transform 0.5s ease',
-            transform: `translateX(-${currentSlide * 100}%)`,
-        },
-        slide: {
-            minWidth: '100%',
-            boxSizing: 'border-box',
-            padding: '10px',
-            textAlign: 'center',
-        },
-        sliderButtons: {
-            position: 'absolute',
-            top: '50%',
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'space-between',
-            transform: 'translateY(-50%)',
-        },
-        button: {
-            background: 'rgba(0, 0, 0, 0.5)',
-            border: 'none',
-            color: 'white',
-            padding: '10px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        disabledButton: {
-            background: 'rgba(0, 0, 0, 0.2)',
-        },
-        img: {
-            width: '80%',
-            maxWidth: '80%',
-            height: 'auto',
-            marginBottom: '8px',
-        },
-        projectTitle: {
-            fontSize: '1.5rem',
-            fontWeight: 'bold',
-            marginBottom: '8px',
-        },
-        projectDescription: {
-            marginBottom: '8px',
-        },
-        divider: {
-            my: 1,
-            borderColor: 'orange',
-        },
-    };
-
     return (
-        <div style={styles.container}>
-            <Typography variant="h2" align="center">Projects</Typography>
-            <div style={styles.sliderContainer}>
-                <div style={styles.sliderWrapper}>
-                    {projectsData.projects.map((project, index) => (
-                        <div key={index} style={styles.slide}>
-                            <Divider sx={styles.divider} />
-                            <img
+        <Box
+            sx={{
+                mx: -2.5,
+                mt: -2.5,
+                minHeight: 'calc(100vh - 73px)',
+                textAlign: 'left',
+                backgroundColor: colors.bg,
+                color: colors.text,
+                fontFamily: 'system-ui, -apple-system, "Segoe UI", sans-serif',
+                padding: { xs: '48px 24px', md: '80px 64px' },
+            }}
+        >
+            <Box sx={{ maxWidth: 1312, margin: '0 auto' }}>
+                <Typography
+                    sx={{
+                        fontFamily: 'ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace',
+                        fontSize: 13,
+                        letterSpacing: '0.14em',
+                        color: colors.accent,
+                        fontWeight: 600,
+                        marginBottom: '10px',
+                    }}
+                >
+                    PORTFOLIO
+                </Typography>
+                <Typography
+                    sx={{
+                        fontFamily: 'ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace',
+                        fontSize: { xs: 34, md: 44 },
+                        fontWeight: 700,
+                        letterSpacing: '-0.02em',
+                        marginBottom: '16px',
+                    }}
+                >
+                    Projects
+                </Typography>
+                <Typography sx={{ fontSize: 16, lineHeight: 1.6, color: colors.textMuted, maxWidth: 560, marginBottom: '48px' }}>
+                    DevOps tooling, infrastructure, and automation I've built — CI/CD pipelines, Kubernetes clusters, and the CLIs that hold them together.
+                </Typography>
+
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+                        gap: '24px',
+                    }}
+                >
+                    {projectsData.projects.map((project) => (
+                        <Box
+                            key={project.name}
+                            component="a"
+                            href={project.githubLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                backgroundColor: colors.elevated,
+                                border: `1px solid ${colors.border}`,
+                                borderRadius: '16px',
+                                overflow: 'hidden',
+                                textDecoration: 'none',
+                                color: 'inherit',
+                                transition: 'transform 0.2s ease, border-color 0.2s ease',
+                                '&:hover': { transform: 'translateY(-3px)', borderColor: colors.accent },
+                                '&:hover .cta-arrow': { transform: 'translate(3px, -3px)' },
+                            }}
+                        >
+                            <Box
+                                component="img"
                                 src={project.image}
                                 alt={project.name}
-                                style={styles.img}
+                                sx={{ width: '100%', height: 180, objectFit: 'cover', display: 'block', backgroundColor: colors.elevated2 }}
                             />
-                            <Typography variant="h6" style={styles.projectTitle}>
-                                {project.name}
-                            </Typography>
-                            <Typography variant="body1" style={styles.projectDescription}>
-                                {project.description}
-                            </Typography>
-                            <Button
-                                variant="contained"
-                                size="large"
-                                href={project.githubLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{ backgroundColor: '#FFA500', color: '#ffffff', marginLeft: '10px' }}
-                            >
-                                Github
-                            </Button>
-                        </div>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, padding: '22px' }}>
+                                <Typography sx={{ fontSize: 17, fontWeight: 700, marginBottom: '8px', color: colors.text }}>
+                                    {project.name}
+                                </Typography>
+                                <Typography sx={{ fontSize: 13.5, color: colors.textMuted, lineHeight: 1.6, marginBottom: '18px' }}>
+                                    {project.description}
+                                </Typography>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 13, fontWeight: 600, color: colors.accent, marginTop: 'auto' }}>
+                                    <GitHubIcon sx={{ fontSize: 15 }} />
+                                    View on GitHub
+                                    <ArrowOutwardIcon className="cta-arrow" sx={{ fontSize: 13, transition: 'transform 0.15s ease' }} />
+                                </Box>
+                            </Box>
+                        </Box>
                     ))}
-                </div>
-                <div style={styles.sliderButtons}>
-                    <button
-                        onClick={handlePrevSlide}
-                        style={{
-                            ...styles.button,
-                            ...(currentSlide === 0 ? styles.disabledButton : {})
-                        }}
-                        disabled={currentSlide === 0}
-                        aria-label="Previous Slide"
-                    >
-                        <ArrowBackIosIcon />
-                    </button>
-                    <button
-                        onClick={handleNextSlide}
-                        style={{
-                            ...styles.button,
-                            ...(currentSlide === projectsData.projects.length - 1 ? styles.disabledButton : {})
-                        }}
-                        disabled={currentSlide === projectsData.projects.length - 1}
-                        aria-label="Next Slide"
-                    >
-                        <ArrowForwardIosIcon />
-                    </button>
-                </div>
-            </div>
-        </div>
+                </Box>
+            </Box>
+        </Box>
     );
 };
 
 export default Projects;
-
