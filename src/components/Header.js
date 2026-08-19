@@ -28,8 +28,8 @@ const Header = () => {
 
   const menuItems = [
     { label: 'Projects', link: '/projects' },
-    { label: 'Knowledge Base', link: '/knowledge-base' },
-    { label: 'About', link: '/about' },
+    { label: 'Resume', link: '/resume' },
+    { label: 'Blog', link: '/blog' },
   ];
 
   return (
