@@ -16,7 +16,7 @@ import Blog from "./pages/Blog"
 function App() {
   return (
     <div className="App">
-      <header className="App-header" style={{ paddingBottom: '5%' }}>
+      <header className="App-header">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Header />}>
