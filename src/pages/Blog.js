@@ -7,14 +7,6 @@ const SUBSTACK_URL = 'https://kt1515.substack.com';
 const FEED_URL = `${SUBSTACK_URL}/feed`;
 const PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(FEED_URL)}`;
 
-const stripHtml = (html) => {
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return (div.textContent || div.innerText || '').replace(/\s+/g, ' ').trim();
-};
-
-const truncate = (text, max) => (text.length > max ? `${text.slice(0, max).trim()}…` : text);
-
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     if (Number.isNaN(date.getTime())) return '';
@@ -25,17 +17,55 @@ const parseFeed = (data) => {
     if (data.status !== 'ok' || !Array.isArray(data.items)) {
         throw new Error('Could not load feed');
     }
-    return data.items.map((item) => {
-        const description = stripHtml(item.description || '');
-        const content = stripHtml(item.content || '');
-        const excerpt = description || content;
-        return {
-            title: item.title,
-            link: item.link,
-            pubDate: item.pubDate,
-            excerpt: truncate(excerpt, 180),
-        };
-    });
+    return data.items.map((item) => ({
+        title: item.title,
+        link: item.link,
+        pubDate: item.pubDate,
+        content: item.content || item.description || '',
+    }));
+};
+
+// Post content is HTML pulled from the account owner's own Substack feed, not
+// arbitrary third-party input, so rendering it directly is safe here.
+const proseStyles = {
+    fontSize: 15.5,
+    lineHeight: 1.75,
+    color: colors.textMuted,
+    overflowWrap: 'anywhere',
+    wordBreak: 'break-word',
+    '& p': { margin: '0 0 18px' },
+    '& a': { color: colors.accent, textDecoration: 'underline', textUnderlineOffset: '3px' },
+    '& img': { maxWidth: '100%', borderRadius: '10px', display: 'block', margin: '20px 0' },
+    '& h1, & h2, & h3': { color: colors.text, fontWeight: 700, margin: '28px 0 14px', lineHeight: 1.3 },
+    '& h1': { fontSize: 24 },
+    '& h2': { fontSize: 21 },
+    '& h3': { fontSize: 18 },
+    '& ul, & ol': { margin: '0 0 18px', paddingLeft: '22px' },
+    '& li': { marginBottom: '8px' },
+    '& blockquote': {
+        margin: '20px 0',
+        padding: '4px 20px',
+        borderLeft: `3px solid ${colors.accent}`,
+        color: colors.textMuted,
+        fontStyle: 'italic',
+    },
+    '& pre': {
+        backgroundColor: colors.elevated2,
+        border: `1px solid ${colors.border}`,
+        borderRadius: '10px',
+        padding: '16px',
+        overflowX: 'auto',
+        fontSize: 13.5,
+    },
+    '& code': {
+        fontFamily: 'ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace',
+        backgroundColor: colors.elevated2,
+        borderRadius: '4px',
+        padding: '2px 5px',
+        fontSize: '0.9em',
+    },
+    '& pre code': { backgroundColor: 'transparent', padding: 0 },
+    '& hr': { border: 'none', borderTop: `1px solid ${colors.border}`, margin: '28px 0' },
 };
 
 const Blog = () => {
@@ -101,7 +131,7 @@ const Blog = () => {
                     Blog
                 </Typography>
                 <Typography sx={{ fontSize: 16, lineHeight: 1.6, color: colors.textMuted, maxWidth: 560, marginBottom: '48px' }}>
-                    Notes on DevOps, SRE, and things I'm learning, cross-posted from{' '}
+                    Notes on software engineering, SRE, and DevOps — things I'm learning, cross-posted from{' '}
                     <Box
                         component="a"
                         href={SUBSTACK_URL}
@@ -141,25 +171,16 @@ const Blog = () => {
                 )}
 
                 {!error && posts !== null && posts.length > 0 && (
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '56px' }}>
                         {posts.map((post) => (
                             <Box
                                 key={post.link}
-                                component="a"
-                                href={post.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                component="article"
                                 sx={{
-                                    display: 'block',
-                                    padding: '26px',
-                                    backgroundColor: colors.elevated,
-                                    border: `1px solid ${colors.border}`,
-                                    borderRadius: '16px',
-                                    textDecoration: 'none',
-                                    color: 'inherit',
-                                    transition: 'transform 0.2s ease, border-color 0.2s ease',
-                                    '&:hover': { transform: 'translateY(-3px)', borderColor: colors.accent },
-                                    '&:hover .cta-arrow': { transform: 'translate(3px, -3px)' },
+                                    minWidth: 0,
+                                    paddingBottom: '56px',
+                                    borderBottom: `1px solid ${colors.border}`,
+                                    '&:last-of-type': { borderBottom: 'none', paddingBottom: 0 },
                                 }}
                             >
                                 {post.pubDate && (
@@ -174,16 +195,30 @@ const Blog = () => {
                                         {formatDate(post.pubDate)}
                                     </Typography>
                                 )}
-                                <Typography sx={{ fontSize: 19, fontWeight: 700, marginBottom: '8px', color: colors.text }}>
+                                <Typography sx={{ fontSize: { xs: 24, md: 28 }, fontWeight: 700, marginBottom: '20px', color: colors.text, lineHeight: 1.2 }}>
                                     {post.title}
                                 </Typography>
-                                {post.excerpt && (
-                                    <Typography sx={{ fontSize: 14, color: colors.textMuted, lineHeight: 1.6, marginBottom: '14px' }}>
-                                        {post.excerpt}
-                                    </Typography>
-                                )}
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 13, fontWeight: 600, color: colors.accent }}>
-                                    Read on Substack
+
+                                <Box sx={proseStyles} dangerouslySetInnerHTML={{ __html: post.content }} />
+
+                                <Box
+                                    component="a"
+                                    href={post.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    sx={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        fontSize: 13,
+                                        fontWeight: 600,
+                                        color: colors.accent,
+                                        textDecoration: 'none',
+                                        marginTop: '8px',
+                                        '&:hover .cta-arrow': { transform: 'translate(3px, -3px)' },
+                                    }}
+                                >
+                                    View on Substack
                                     <ArrowOutwardIcon className="cta-arrow" sx={{ fontSize: 13, transition: 'transform 0.15s ease' }} />
                                 </Box>
                             </Box>

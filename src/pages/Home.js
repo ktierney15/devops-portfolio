@@ -10,7 +10,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import colors from '../theme/colors';
 
-const stack = ['CI/CD', 'Docker', 'Kubernetes', 'Terraform', 'AWS', 'Linux'];
+const stack = ['JavaScript', 'Python', 'Go', 'CI/CD', 'Kubernetes', 'AWS'];
 
 const panes = [
   {
@@ -148,7 +148,7 @@ const Home = () => {
                 fontWeight: 600,
               }}
             >
-              SOFTWARE ENGINEER · DEVOPS
+              SOFTWARE ENGINEER
             </Typography>
             <Typography
               sx={{
@@ -163,7 +163,7 @@ const Home = () => {
               Kevin Tierney
             </Typography>
             <Typography sx={{ fontSize: 18, lineHeight: 1.6, color: colors.textMuted, maxWidth: 460 }}>
-              I build and ship the infrastructure other engineers build on — CI/CD pipelines, containers, and cloud systems that hold up at 3am.
+              Software engineer with hands-on experience in SRE and DevOps — from application code to the CI/CD pipelines and cloud infrastructure that ship it.
             </Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '12px' }}>

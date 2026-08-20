@@ -44,7 +44,7 @@ const Projects = () => {
                     Projects
                 </Typography>
                 <Typography sx={{ fontSize: 16, lineHeight: 1.6, color: colors.textMuted, maxWidth: 560, marginBottom: '48px' }}>
-                    DevOps tooling, infrastructure, and automation I've built — CI/CD pipelines, Kubernetes clusters, and the CLIs that hold them together.
+                    Software projects I've built, from application tooling to the CI/CD pipelines and cloud infrastructure I've picked up along the way.
                 </Typography>
 
                 <Box
