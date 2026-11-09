@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import colors from '../theme/colors';
 
-const SUBSTACK_URL = 'https://kt1515.substack.com';
-const FEED_URL = `${SUBSTACK_URL}/feed`;
-const PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(FEED_URL)}`;
+const PUBLICATIONS = [
+    {
+        key: 'systems',
+        label: 'Software',
+        url: 'https://systemsandsoftware.substack.com',
+        description: "Notes on software engineering and things I'm learning",
+    },
+    {
+        key: 'cutman',
+        label: 'Martial Arts',
+        url: 'https://cutmanmma.substack.com',
+        description: 'Writing on MMA',
+    },
+];
+
+const feedProxyUrl = (substackUrl) =>
+    `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(`${substackUrl}/feed`)}`;
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -69,29 +84,41 @@ const proseStyles = {
 };
 
 const Blog = () => {
-    const [posts, setPosts] = useState(null);
-    const [error, setError] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activePub = PUBLICATIONS.find((p) => p.key === searchParams.get('pub')) || PUBLICATIONS[0];
+
+    // Cache of fetched feeds keyed by publication: { posts, error }
+    const [feeds, setFeeds] = useState({});
+    const feed = feeds[activePub.key];
+    const posts = feed ? feed.posts : null;
+    const error = feed ? feed.error : false;
 
     useEffect(() => {
+        if (feeds[activePub.key]) return undefined;
         let cancelled = false;
+        const { key, url } = activePub;
 
-        fetch(PROXY_URL)
+        fetch(feedProxyUrl(url))
             .then((res) => {
                 if (!res.ok) throw new Error('Feed request failed');
                 return res.json();
             })
             .then((data) => {
                 if (cancelled) return;
-                setPosts(parseFeed(data));
+                setFeeds((prev) => ({ ...prev, [key]: { posts: parseFeed(data), error: false } }));
             })
             .catch(() => {
-                if (!cancelled) setError(true);
+                if (!cancelled) setFeeds((prev) => ({ ...prev, [key]: { posts: null, error: true } }));
             });
 
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [activePub, feeds]);
+
+    const selectPub = (key) => {
+        setSearchParams(key === PUBLICATIONS[0].key ? {} : { pub: key }, { replace: true });
+    };
 
     return (
         <Box
@@ -130,11 +157,52 @@ const Blog = () => {
                 >
                     Blog
                 </Typography>
+                <Box
+                    role="tablist"
+                    aria-label="Publications"
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '8px',
+                        marginBottom: '24px',
+                    }}
+                >
+                    {PUBLICATIONS.map((pub) => {
+                        const selected = pub.key === activePub.key;
+                        return (
+                            <Box
+                                key={pub.key}
+                                component="button"
+                                type="button"
+                                role="tab"
+                                aria-selected={selected}
+                                onClick={() => selectPub(pub.key)}
+                                sx={{
+                                    fontFamily: 'ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace',
+                                    fontSize: 13,
+                                    fontWeight: 600,
+                                    padding: '8px 16px',
+                                    borderRadius: '999px',
+                                    cursor: 'pointer',
+                                    border: `1px solid ${selected ? colors.accent : colors.border}`,
+                                    backgroundColor: selected ? 'rgba(255, 165, 0, 0.12)' : colors.elevated,
+                                    color: selected ? colors.accent : colors.textMuted,
+                                    transition: 'all 0.15s ease',
+                                    '&:hover': { color: selected ? colors.accent : colors.text, borderColor: selected ? colors.accent : colors.textDim },
+                                    '&:focus-visible': { outline: `2px solid ${colors.accent}`, outlineOffset: '2px' },
+                                }}
+                            >
+                                {pub.label}
+                            </Box>
+                        );
+                    })}
+                </Box>
+
                 <Typography sx={{ fontSize: 16, lineHeight: 1.6, color: colors.textMuted, maxWidth: 560, marginBottom: '48px' }}>
-                    Notes on software engineering, SRE, and DevOps — things I'm learning, cross-posted from{' '}
+                    {activePub.description}, cross-posted from{' '}
                     <Box
                         component="a"
-                        href={SUBSTACK_URL}
+                        href={activePub.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{ color: colors.accent, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
@@ -151,7 +219,7 @@ const Blog = () => {
                         </Typography>
                         <Box
                             component="a"
-                            href={SUBSTACK_URL}
+                            href={activePub.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             sx={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: 13, fontWeight: 600, color: colors.accent, textDecoration: 'none' }}
