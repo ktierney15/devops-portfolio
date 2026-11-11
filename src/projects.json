@@ -13,7 +13,7 @@
         "description": "Python project that gathers and summarizes cloud spending data"
       },
       {
-        "name": "Python NewsFeed",
+        "name": "Terminal NewsFeed",
         "image": "/news.png",
         "githubLink": "https://github.com/ktierney15/news",
         "description": "Python project that creates a custom news dashboard for you"
@@ -25,12 +25,6 @@
         "description": "Development Minikube EC2 instance to test out K8s deployment configurations. Consists of terraform configuration (Deployed via CI/CD) and multiple example deployments"
       },
       {
-        "name": "Github Actions CLI tool",
-        "image": "/gha-cli.png",
-        "githubLink": "https://github.com/ktierney15/GHA-Deploy-CLI",
-        "description": "Python Command Line tool to run Github actions, specifically my CI/CD pipelines"
-      },
-      {
         "name": "Pipeline Templates Repository",
         "image": "/pipelines.jpeg",
         "githubLink": "https://github.com/ktierney15/pipeline-templates",
@@ -38,9 +32,9 @@
       },
       {
         "name": "My Website",
-        "image": "/my-site.png",
+        "image": "/my-site.webp",
         "githubLink": "https://github.com/ktierney15/devops-portfolio",
-        "description": "My website showcasing my DevOps projects and experience (the website that you are on right now)"
+        "description": "My website showcasing my projects and experience (the website that you are on right now)"
       }
     ]
   }
