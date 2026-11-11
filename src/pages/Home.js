@@ -9,14 +9,14 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import colors from '../theme/colors';
 
-const stack = ['JavaScript', 'Python', 'Go', 'CI/CD', 'Kubernetes', 'AWS'];
+const stack = ['Python', 'Kubernetes', 'Infrastructure', 'Systems Design'];
 
 const panes = [
   {
     to: '/projects',
     icon: <FolderOutlinedIcon sx={{ fontSize: 19 }} />,
     title: 'Projects',
-    description: 'CI/CD, cloud infra, and app delivery.',
+    description: "Things I've built.",
     cta: 'View',
     borderRight: true,
     borderBottom: true,
@@ -25,7 +25,7 @@ const panes = [
     to: '/blog',
     icon: <TerminalOutlinedIcon sx={{ fontSize: 19 }} />,
     title: 'Blog',
-    description: 'Notes on DevOps and SRE.',
+    description: 'Writing on software and martial arts.',
     cta: 'Read',
     borderRight: false,
     borderBottom: true,
@@ -153,7 +153,7 @@ const Home = () => {
               Kevin Tierney
             </Typography>
             <Typography sx={{ fontSize: 18, lineHeight: 1.6, color: colors.textMuted, maxWidth: 460 }}>
-              Software engineer with hands-on experience in SRE and DevOps — from application code to the CI/CD pipelines and cloud infrastructure that ship it.
+              Software engineer who builds reliable, well-designed systems.
             </Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '12px' }}>
