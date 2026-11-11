@@ -6,11 +6,20 @@ provider "aws" {
 
 locals {
   content_type_map = {
-    "js"  = "application/javascript"
-    "jsx" = "application/javascript"
+    "js"   = "application/javascript"
+    "jsx"  = "application/javascript"
     "html" = "text/html"
-    "css" = "text/css"
+    "css"  = "text/css"
     "json" = "application/json"
+    "map"  = "application/json"
+    "txt"  = "text/plain"
+    "png"  = "image/png"
+    "jpg"  = "image/jpeg"
+    "jpeg" = "image/jpeg"
+    "gif"  = "image/gif"
+    "webp" = "image/webp"
+    "svg"  = "image/svg+xml"
+    "ico"  = "image/x-icon"
   }
 }
 
@@ -23,12 +32,12 @@ terraform {
 }
 
 resource "aws_s3_object" "app" {
-  for_each = fileset("${var.source_path}", "**")
-  bucket   = aws_s3_bucket.bucket.bucket
-  key      = each.value
-  source   = "${var.source_path}/${each.value}"
-  etag     = filemd5("${var.source_path}/${each.value}")
-  content_type = lookup(local.content_type_map, split(".", each.value)[length(split(".", each.value)) - 1], "application/octet-stream")
+  for_each     = fileset("${var.source_path}", "**")
+  bucket       = aws_s3_bucket.bucket.bucket
+  key          = each.value
+  source       = "${var.source_path}/${each.value}"
+  etag         = filemd5("${var.source_path}/${each.value}")
+  content_type = lookup(local.content_type_map, lower(element(split(".", each.value), length(split(".", each.value)) - 1)), "application/octet-stream")
 }
 
 resource "aws_s3_bucket" "bucket" {
@@ -54,23 +63,23 @@ resource "aws_s3_bucket_website_configuration" "website" {
 resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.bucket.id
 
-  block_public_policy     = false 
+  block_public_policy     = false
   restrict_public_buckets = false
-  block_public_acls       = false 
+  block_public_acls       = false
   ignore_public_acls      = false
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.bucket.id
+  bucket     = aws_s3_bucket.bucket.id
   depends_on = [aws_s3_bucket_public_access_block.public_access]
 
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow",
+        Effect    = "Allow",
         Principal = "*",
-        Action = "s3:GetObject",
+        Action    = "s3:GetObject",
         Resource = [
           "${aws_s3_bucket.bucket.arn}",
           "${aws_s3_bucket.bucket.arn}/*"
@@ -90,7 +99,7 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  aliases = ["www.${var.domain_name}", var.domain_name]
+  aliases             = ["www.${var.domain_name}", var.domain_name]
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"
@@ -107,7 +116,7 @@ resource "aws_cloudfront_distribution" "cdn" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
@@ -120,14 +129,22 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
   viewer_certificate {
-    acm_certificate_arn            = aws_acm_certificate.cert.arn
-    ssl_support_method              = "sni-only"
-    minimum_protocol_version        = "TLSv1.2_2018"
+    acm_certificate_arn      = aws_acm_certificate.cert.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2018"
+  }
+
+  # Client-side routes (e.g. /blog/cutman/<slug>) don't exist as S3 objects,
+  # so serve index.html and let React Router handle them.
+  custom_error_response {
+    error_code         = 403
+    response_page_path = "/index.html"
+    response_code      = 200
   }
 
   custom_error_response {
-    error_code         = "403"
-    response_page_path = "/"
+    error_code         = 404
+    response_page_path = "/index.html"
     response_code      = 200
   }
 
@@ -141,9 +158,9 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name       = var.domain_name
-  subject_alternative_names = ["www.${var.domain_name}"] 
-  validation_method = "DNS"
+  domain_name               = var.domain_name
+  subject_alternative_names = ["www.${var.domain_name}"]
+  validation_method         = "DNS"
 
   tags = {
     Name = "${var.domain_name} Certificate"

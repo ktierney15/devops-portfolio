@@ -6,22 +6,23 @@ import Header from "./components/Header"
 
 import Home from "./pages/Home"
 import Projects from "./pages/Projects"
-import Knowledge from "./pages/Kowledge"
-import About from "./pages/About"
+import Resume from "./pages/Resume"
+import Blog, { BlogPost } from "./pages/Blog"
 
 
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header" style={{ paddingBottom: '5%' }}>
+      <header className="App-header">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Header />}>
             <Route index element={<Home />} />
             <Route path="projects" element={<Projects />} />
-            <Route path="knowledge-base" element={<Knowledge />} />
-            <Route path="about" element={<About />} />
+            <Route path="resume" element={<Resume />} />
+            <Route path="blog" element={<Blog />} />
+            <Route path="blog/:pubKey/:slug" element={<BlogPost />} />
             {/* Catch all route */}
             <Route path="*" element={<Home />} />
           </Route>
