@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Box, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -13,6 +13,12 @@ const menuItems = [
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  // Start each page at the top instead of keeping the previous page's scroll position.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
