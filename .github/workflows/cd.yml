@@ -54,6 +54,8 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.1.9
+          # Plain terraform binary so `terraform output -raw` can be captured cleanly.
+          terraform_wrapper: false
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -77,3 +79,11 @@ jobs:
       - name: Apply Terraform
         run: terraform apply -auto-approve plan.tfplan
         working-directory: ./IAC
+
+      # CloudFront caches index.html; without this, visitors can get the old
+      # index.html pointing at JS bundles that were just deleted from S3.
+      - name: Invalidate CloudFront cache
+        working-directory: ./IAC
+        run: |
+          DISTRIBUTION_ID=$(terraform output -raw cloudfront_distribution_id)
+          aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*"
