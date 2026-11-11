@@ -27,3 +27,8 @@ output "root_domain" {
   description = "The root domain name"
   value       = aws_route53_record.root.name
 }
+
+output "cloudfront_distribution_id" {
+  description = "ID of the CloudFront distribution (used to invalidate the cache after deploys)"
+  value       = aws_cloudfront_distribution.cdn.id
+}
