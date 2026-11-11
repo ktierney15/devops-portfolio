@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
 import LinkIcon from '@mui/icons-material/Link';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
@@ -23,22 +22,13 @@ const panes = [
     borderBottom: true,
   },
   {
-    to: '/resume',
-    icon: <DescriptionOutlinedIcon sx={{ fontSize: 19 }} />,
-    title: 'Resume',
-    description: 'Experience, skills, and tools.',
-    cta: 'View',
-    borderRight: false,
-    borderBottom: true,
-  },
-  {
     to: '/blog',
     icon: <TerminalOutlinedIcon sx={{ fontSize: 19 }} />,
     title: 'Blog',
     description: 'Notes on DevOps and SRE.',
     cta: 'Read',
-    borderRight: true,
-    borderBottom: false,
+    borderRight: false,
+    borderBottom: true,
   },
 ];
 
@@ -184,24 +174,6 @@ const Home = () => {
               >
                 View Projects
               </Button>
-              <Button
-                component={Link}
-                to="/resume"
-                sx={{
-                  backgroundColor: 'transparent',
-                  color: colors.textMuted,
-                  border: `1px solid ${colors.border}`,
-                  fontWeight: 600,
-                  fontSize: 15,
-                  padding: '13px 26px',
-                  borderRadius: '8px',
-                  textTransform: 'none',
-                  transition: 'border-color 0.15s ease, color 0.15s ease',
-                  '&:hover': { borderColor: colors.accent, color: colors.text, backgroundColor: 'transparent' },
-                }}
-              >
-                Get Resume
-              </Button>
             </Box>
 
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
@@ -255,7 +227,7 @@ const Home = () => {
               ))}
 
               {/* Connect */}
-              <Box sx={{ padding: '26px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <Box sx={{ gridColumn: '1 / -1', padding: '26px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <Box>
                   <Box
                     sx={{
@@ -338,7 +310,6 @@ const Home = () => {
         <Typography sx={{ fontSize: 13.5, color: colors.textDim }}>© 2026 Kevin Tierney</Typography>
         <Box sx={{ display: 'flex', gap: '32px' }}>
           <Box component={Link} to="/projects" sx={{ fontSize: 13.5, color: colors.textMuted, textDecoration: 'none', '&:hover': { color: colors.text } }}>Projects</Box>
-          <Box component={Link} to="/resume" sx={{ fontSize: 13.5, color: colors.textMuted, textDecoration: 'none', '&:hover': { color: colors.text } }}>Resume</Box>
           <Box component={Link} to="/blog" sx={{ fontSize: 13.5, color: colors.textMuted, textDecoration: 'none', '&:hover': { color: colors.text } }}>Blog</Box>
         </Box>
       </Box>

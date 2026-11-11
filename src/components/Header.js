@@ -8,7 +8,6 @@ import colors from '../theme/colors';
 
 const menuItems = [
   { label: 'Projects', link: '/projects' },
-  { label: 'Resume', link: '/resume' },
   { label: 'Blog', link: '/blog' },
 ];
 
