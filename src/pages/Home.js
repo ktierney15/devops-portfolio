@@ -214,8 +214,8 @@ const Home = () => {
               sx={{
                 display: 'grid',
                 gridTemplateColumns: '1fr 1fr',
-                gridTemplateRows: '1fr 1fr',
-                aspectRatio: '1 / 1',
+                gridTemplateRows: { xs: 'auto', md: '1fr 1fr' },
+                aspectRatio: { xs: 'auto', md: '1 / 1' },
                 backgroundColor: colors.elevated,
                 border: `1px solid ${colors.border}`,
                 borderRadius: '16px',
